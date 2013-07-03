@@ -1,0 +1,796 @@
+<?xml version="1.0" encoding="gb2312"?>
+<VisualStudioProject
+	ProjectType="Visual C++"
+	Version="8.00"
+	Name="3DTank"
+	ProjectGUID="{998A3B55-1DFD-443E-A0B0-6C197EA0952E}"
+	RootNamespace="My3DTank"
+	Keyword="Win32Proj"
+	>
+	<Platforms>
+		<Platform
+			Name="Win32"
+		/>
+	</Platforms>
+	<ToolFiles>
+	</ToolFiles>
+	<Configurations>
+		<Configuration
+			Name="Debug|Win32"
+			OutputDirectory="$(SolutionDir)$(ConfigurationName)"
+			IntermediateDirectory="$(ConfigurationName)"
+			ConfigurationType="1"
+			CharacterSet="2"
+			>
+			<Tool
+				Name="VCPreBuildEventTool"
+			/>
+			<Tool
+				Name="VCCustomBuildTool"
+			/>
+			<Tool
+				Name="VCXMLDataGeneratorTool"
+			/>
+			<Tool
+				Name="VCWebServiceProxyGeneratorTool"
+			/>
+			<Tool
+				Name="VCMIDLTool"
+			/>
+			<Tool
+				Name="VCCLCompilerTool"
+				UseUnicodeResponseFiles="true"
+				Optimization="0"
+				AdditionalIncludeDirectories="&quot;C:\Program Files (x86)\Microsoft DirectX SDK (February 2010)\Include&quot;"
+				PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS"
+				MinimalRebuild="true"
+				BasicRuntimeChecks="3"
+				RuntimeLibrary="3"
+				UsePrecompiledHeader="2"
+				WarningLevel="3"
+				Detect64BitPortabilityProblems="true"
+				DebugInformationFormat="4"
+			/>
+			<Tool
+				Name="VCManagedResourceCompilerTool"
+			/>
+			<Tool
+				Name="VCResourceCompilerTool"
+			/>
+			<Tool
+				Name="VCPreLinkEventTool"
+			/>
+			<Tool
+				Name="VCLinkerTool"
+				UseUnicodeResponseFiles="true"
+				AdditionalDependencies="d3d9.lib d3dx9.lib winmm.lib dxguid.lib dinput8.lib dsound.lib"
+				LinkIncremental="2"
+				AdditionalLibraryDirectories="&quot;C:\Program Files (x86)\Microsoft DirectX SDK (February 2010)\Lib\x86&quot;"
+				GenerateDebugInformation="true"
+				SubSystem="2"
+				TargetMachine="1"
+			/>
+			<Tool
+				Name="VCALinkTool"
+			/>
+			<Tool
+				Name="VCManifestTool"
+			/>
+			<Tool
+				Name="VCXDCMakeTool"
+			/>
+			<Tool
+				Name="VCBscMakeTool"
+			/>
+			<Tool
+				Name="VCFxCopTool"
+			/>
+			<Tool
+				Name="VCAppVerifierTool"
+			/>
+			<Tool
+				Name="VCWebDeploymentTool"
+			/>
+			<Tool
+				Name="VCPostBuildEventTool"
+			/>
+		</Configuration>
+		<Configuration
+			Name="Release|Win32"
+			OutputDirectory="$(SolutionDir)$(ConfigurationName)"
+			IntermediateDirectory="$(ConfigurationName)"
+			ConfigurationType="1"
+			CharacterSet="1"
+			WholeProgramOptimization="1"
+			>
+			<Tool
+				Name="VCPreBuildEventTool"
+			/>
+			<Tool
+				Name="VCCustomBuildTool"
+			/>
+			<Tool
+				Name="VCXMLDataGeneratorTool"
+			/>
+			<Tool
+				Name="VCWebServiceProxyGeneratorTool"
+			/>
+			<Tool
+				Name="VCMIDLTool"
+			/>
+			<Tool
+				Name="VCCLCompilerTool"
+				PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS"
+				RuntimeLibrary="2"
+				UsePrecompiledHeader="2"
+				WarningLevel="3"
+				Detect64BitPortabilityProblems="true"
+				DebugInformationFormat="3"
+			/>
+			<Tool
+				Name="VCManagedResourceCompilerTool"
+			/>
+			<Tool
+				Name="VCResourceCompilerTool"
+			/>
+			<Tool
+				Name="VCPreLinkEventTool"
+			/>
+			<Tool
+				Name="VCLinkerTool"
+				LinkIncremental="1"
+				GenerateDebugInformation="true"
+				SubSystem="2"
+				OptimizeReferences="2"
+				EnableCOMDATFolding="2"
+				TargetMachine="1"
+			/>
+			<Tool
+				Name="VCALinkTool"
+			/>
+			<Tool
+				Name="VCManifestTool"
+			/>
+			<Tool
+				Name="VCXDCMakeTool"
+			/>
+			<Tool
+				Name="VCBscMakeTool"
+			/>
+			<Tool
+				Name="VCFxCopTool"
+			/>
+			<Tool
+				Name="VCAppVerifierTool"
+			/>
+			<Tool
+				Name="VCWebDeploymentTool"
+			/>
+			<Tool
+				Name="VCPostBuildEventTool"
+			/>
+		</Configuration>
+	</Configurations>
+	<References>
+	</References>
+	<Files>
+		<Filter
+			Name="源文件"
+			Filter="cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx"
+			UniqueIdentifier="{4FC737F1-C7A5-4376-A066-2A32D752A2FF}"
+			>
+			<File
+				RelativePath=".\GameApp.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\GameApp.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Main.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\Main.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Publish.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Resource.h"
+				>
+			</File>
+			<File
+				RelativePath=".\stdafx.cpp"
+				>
+				<FileConfiguration
+					Name="Debug|Win32"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+						UsePrecompiledHeader="1"
+					/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Release|Win32"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+						UsePrecompiledHeader="1"
+					/>
+				</FileConfiguration>
+			</File>
+			<File
+				RelativePath=".\stdafx.h"
+				>
+			</File>
+			<File
+				RelativePath=".\targetver.h"
+				>
+			</File>
+			<Filter
+				Name="Model"
+				>
+				<File
+					RelativePath=".\3DModel.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\3DModel.h"
+					>
+				</File>
+				<File
+					RelativePath=".\3DModelFactory.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\3DModelFactory.h"
+					>
+				</File>
+				<File
+					RelativePath=".\Bullet.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\Bullet.h"
+					>
+				</File>
+				<File
+					RelativePath=".\Tank.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\Tank.h"
+					>
+				</File>
+				<File
+					RelativePath=".\Tree.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\Tree.h"
+					>
+				</File>
+				<File
+					RelativePath=".\Wall.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\Wall.h"
+					>
+				</File>
+			</Filter>
+			<Filter
+				Name="Engine"
+				>
+				<File
+					RelativePath=".\Billboard.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\Billboard.h"
+					>
+				</File>
+				<File
+					RelativePath=".\Camera.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\Camera.h"
+					>
+				</File>
+				<File
+					RelativePath=".\DX_Input.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\DX_Input.h"
+					>
+				</File>
+				<File
+					RelativePath=".\DX_Sound.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\DX_Sound.h"
+					>
+				</File>
+				<File
+					RelativePath=".\EngineDefine.h"
+					>
+				</File>
+				<File
+					RelativePath=".\GraphicsEngine.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\GraphicsEngine.h"
+					>
+				</File>
+				<File
+					RelativePath=".\Particle.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\Particle.h"
+					>
+				</File>
+				<File
+					RelativePath=".\Quad.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\Quad.h"
+					>
+				</File>
+				<File
+					RelativePath=".\TextureMgr.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\TextureMgr.h"
+					>
+				</File>
+				<File
+					RelativePath=".\Timer.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\Timer.h"
+					>
+				</File>
+				<File
+					RelativePath=".\XFileMesh.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\XFileMesh.h"
+					>
+				</File>
+			</Filter>
+			<Filter
+				Name="Game"
+				>
+				<File
+					RelativePath=".\GameInformation.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\GameInformation.h"
+					>
+				</File>
+				<File
+					RelativePath=".\GameState.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\GameState.h"
+					>
+				</File>
+				<File
+					RelativePath=".\GameStateManager.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\GameStateManager.h"
+					>
+				</File>
+				<File
+					RelativePath=".\GSWar.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\GSWar.h"
+					>
+				</File>
+				<File
+					RelativePath=".\MessageMgr.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\MessageMgr.h"
+					>
+				</File>
+				<File
+					RelativePath=".\ParticleMgr.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\ParticleMgr.h"
+					>
+				</File>
+				<File
+					RelativePath=".\SceneMgr.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\SceneMgr.h"
+					>
+				</File>
+			</Filter>
+		</Filter>
+		<Filter
+			Name="资源文件"
+			Filter="rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav"
+			UniqueIdentifier="{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}"
+			>
+			<File
+				RelativePath=".\3DTank.ico"
+				>
+			</File>
+			<File
+				RelativePath=".\3DTank.rc"
+				>
+			</File>
+			<File
+				RelativePath=".\small.ico"
+				>
+			</File>
+		</Filter>
+		<Filter
+			Name="DXInclude"
+			>
+			<File
+				RelativePath="C:\Program Files (x86)\Microsoft DirectX SDK (February 2010)\Include\audiodefs.h"
+				>
+			</File>
+			<File
+				RelativePath="C:\Program Files (x86)\Microsoft DirectX SDK (February 2010)\Include\comdecl.h"
+				>
+			</File>
+			<File
+				RelativePath="C:\Program Files (x86)\Microsoft DirectX SDK (February 2010)\Include\D2D1.h"
+				>
+			</File>
+			<File
+				RelativePath="C:\Program Files (x86)\Microsoft DirectX SDK (February 2010)\Include\D2D1Helper.h"
+				>
+			</File>
+			<File
+				RelativePath="C:\Program Files (x86)\Microsoft DirectX SDK (February 2010)\Include\D2DBaseTypes.h"
+				>
+			</File>
+			<File
+				RelativePath="C:\Program Files (x86)\Microsoft DirectX SDK (February 2010)\Include\D2Derr.h"
+				>
+			</File>
+			<File
+				RelativePath="C:\Program Files (x86)\Microsoft DirectX SDK (February 2010)\Include\D3D10.h"
+				>
+			</File>
+			<File
+				RelativePath="C:\Program Files (x86)\Microsoft DirectX SDK (February 2010)\Include\D3D10_1.h"
+				>
+			</File>
+			<File
+				RelativePath="C:\Program Files (x86)\Microsoft DirectX SDK (February 2010)\Include\D3D10_1shader.h"
+				>
+			</File>
+			<File
+				RelativePath="C:\Program Files (x86)\Microsoft DirectX SDK (February 2010)\Include\D3D10effect.h"
+				>
+			</File>
+			<File
+				RelativePath="C:\Program Files (x86)\Microsoft DirectX SDK (February 2010)\Include\d3d10misc.h"
+				>
+			</File>
+			<File
+				RelativePath="C:\Program Files (x86)\Microsoft DirectX SDK (February 2010)\Include\d3d10sdklayers.h"
+				>
+			</File>
+			<File
+				RelativePath="C:\Program Files (x86)\Microsoft DirectX SDK (February 2010)\Include\D3D10shader.h"
+				>
+			</File>
+			<File
+				RelativePath="C:\Program Files (x86)\Microsoft DirectX SDK (February 2010)\Include\D3D11.h"
+				>
+			</File>
+			<File
+				RelativePath="C:\Program Files (x86)\Microsoft DirectX SDK (February 2010)\Include\D3D11SDKLayers.h"
+				>
+			</File>
+			<File
+				RelativePath="C:\Program Files (x86)\Microsoft DirectX SDK (February 2010)\Include\D3D11Shader.h"
+				>
+			</File>
+			<File
+				RelativePath="C:\Program Files (x86)\Microsoft DirectX SDK (February 2010)\Include\d3d9.h"
+				>
+			</File>
+			<File
+				RelativePath="C:\Program Files (x86)\Microsoft DirectX SDK (February 2010)\Include\d3d9caps.h"
+				>
+			</File>
+			<File
+				RelativePath="C:\Program Files (x86)\Microsoft DirectX SDK (February 2010)\Include\d3d9types.h"
+				>
+			</File>
+			<File
+				RelativePath="C:\Program Files (x86)\Microsoft DirectX SDK (February 2010)\Include\D3Dcommon.h"
+				>
+			</File>
+			<File
+				RelativePath="C:\Program Files (x86)\Microsoft DirectX SDK (February 2010)\Include\D3Dcompiler.h"
+				>
+			</File>
+			<File
+				RelativePath="C:\Program Files (x86)\Microsoft DirectX SDK (February 2010)\Include\D3DCSX.h"
+				>
+			</File>
+			<File
+				RelativePath="C:\Program Files (x86)\Microsoft DirectX SDK (February 2010)\Include\D3DX10.h"
+				>
+			</File>
+			<File
+				RelativePath="C:\Program Files (x86)\Microsoft DirectX SDK (February 2010)\Include\d3dx10async.h"
+				>
+			</File>
+			<File
+				RelativePath="C:\Program Files (x86)\Microsoft DirectX SDK (February 2010)\Include\D3DX10core.h"
+				>
+			</File>
+			<File
+				RelativePath="C:\Program Files (x86)\Microsoft DirectX SDK (February 2010)\Include\D3DX10math.h"
+				>
+			</File>
+			<File
+				RelativePath="C:\Program Files (x86)\Microsoft DirectX SDK (February 2010)\Include\D3DX10math.inl"
+				>
+			</File>
+			<File
+				RelativePath="C:\Program Files (x86)\Microsoft DirectX SDK (February 2010)\Include\D3DX10mesh.h"
+				>
+			</File>
+			<File
+				RelativePath="C:\Program Files (x86)\Microsoft DirectX SDK (February 2010)\Include\D3DX10tex.h"
+				>
+			</File>
+			<File
+				RelativePath="C:\Program Files (x86)\Microsoft DirectX SDK (February 2010)\Include\D3DX11.h"
+				>
+			</File>
+			<File
+				RelativePath="C:\Program Files (x86)\Microsoft DirectX SDK (February 2010)\Include\D3DX11async.h"
+				>
+			</File>
+			<File
+				RelativePath="C:\Program Files (x86)\Microsoft DirectX SDK (February 2010)\Include\D3DX11core.h"
+				>
+			</File>
+			<File
+				RelativePath="C:\Program Files (x86)\Microsoft DirectX SDK (February 2010)\Include\D3DX11tex.h"
+				>
+			</File>
+			<File
+				RelativePath="C:\Program Files (x86)\Microsoft DirectX SDK (February 2010)\Include\d3dx9.h"
+				>
+			</File>
+			<File
+				RelativePath="C:\Program Files (x86)\Microsoft DirectX SDK (February 2010)\Include\d3dx9anim.h"
+				>
+			</File>
+			<File
+				RelativePath="C:\Program Files (x86)\Microsoft DirectX SDK (February 2010)\Include\d3dx9core.h"
+				>
+			</File>
+			<File
+				RelativePath="C:\Program Files (x86)\Microsoft DirectX SDK (February 2010)\Include\d3dx9effect.h"
+				>
+			</File>
+			<File
+				RelativePath="C:\Program Files (x86)\Microsoft DirectX SDK (February 2010)\Include\d3dx9math.h"
+				>
+			</File>
+			<File
+				RelativePath="C:\Program Files (x86)\Microsoft DirectX SDK (February 2010)\Include\d3dx9math.inl"
+				>
+			</File>
+			<File
+				RelativePath="C:\Program Files (x86)\Microsoft DirectX SDK (February 2010)\Include\d3dx9mesh.h"
+				>
+			</File>
+			<File
+				RelativePath="C:\Program Files (x86)\Microsoft DirectX SDK (February 2010)\Include\d3dx9shader.h"
+				>
+			</File>
+			<File
+				RelativePath="C:\Program Files (x86)\Microsoft DirectX SDK (February 2010)\Include\d3dx9shape.h"
+				>
+			</File>
+			<File
+				RelativePath="C:\Program Files (x86)\Microsoft DirectX SDK (February 2010)\Include\d3dx9tex.h"
+				>
+			</File>
+			<File
+				RelativePath="C:\Program Files (x86)\Microsoft DirectX SDK (February 2010)\Include\d3dx9xof.h"
+				>
+			</File>
+			<File
+				RelativePath="C:\Program Files (x86)\Microsoft DirectX SDK (February 2010)\Include\Dcommon.h"
+				>
+			</File>
+			<File
+				RelativePath="C:\Program Files (x86)\Microsoft DirectX SDK (February 2010)\Include\ddraw.h"
+				>
+			</File>
+			<File
+				RelativePath="C:\Program Files (x86)\Microsoft DirectX SDK (February 2010)\Include\dinput.h"
+				>
+			</File>
+			<File
+				RelativePath="C:\Program Files (x86)\Microsoft DirectX SDK (February 2010)\Include\dinputd.h"
+				>
+			</File>
+			<File
+				RelativePath="C:\Program Files (x86)\Microsoft DirectX SDK (February 2010)\Include\dsconf.h"
+				>
+			</File>
+			<File
+				RelativePath="C:\Program Files (x86)\Microsoft DirectX SDK (February 2010)\Include\dsetup.h"
+				>
+			</File>
+			<File
+				RelativePath="C:\Program Files (x86)\Microsoft DirectX SDK (February 2010)\Include\dsound.h"
+				>
+			</File>
+			<File
+				RelativePath="C:\Program Files (x86)\Microsoft DirectX SDK (February 2010)\Include\dvp.h"
+				>
+			</File>
+			<File
+				RelativePath="C:\Program Files (x86)\Microsoft DirectX SDK (February 2010)\Include\DWrite.h"
+				>
+			</File>
+			<File
+				RelativePath="C:\Program Files (x86)\Microsoft DirectX SDK (February 2010)\Include\dxdiag.h"
+				>
+			</File>
+			<File
+				RelativePath="C:\Program Files (x86)\Microsoft DirectX SDK (February 2010)\Include\DxErr.h"
+				>
+			</File>
+			<File
+				RelativePath="C:\Program Files (x86)\Microsoft DirectX SDK (February 2010)\Include\dxfile.h"
+				>
+			</File>
+			<File
+				RelativePath="C:\Program Files (x86)\Microsoft DirectX SDK (February 2010)\Include\DXGI.h"
+				>
+			</File>
+			<File
+				RelativePath="C:\Program Files (x86)\Microsoft DirectX SDK (February 2010)\Include\DXGIFormat.h"
+				>
+			</File>
+			<File
+				RelativePath="C:\Program Files (x86)\Microsoft DirectX SDK (February 2010)\Include\DXGIType.h"
+				>
+			</File>
+			<File
+				RelativePath="C:\Program Files (x86)\Microsoft DirectX SDK (February 2010)\Include\dxsdkver.h"
+				>
+			</File>
+			<File
+				RelativePath="C:\Program Files (x86)\Microsoft DirectX SDK (February 2010)\Include\gameux.h"
+				>
+			</File>
+			<File
+				RelativePath="C:\Program Files (x86)\Microsoft DirectX SDK (February 2010)\Include\multimon.h"
+				>
+			</File>
+			<File
+				RelativePath="C:\Program Files (x86)\Microsoft DirectX SDK (February 2010)\Include\PIXPlugin.h"
+				>
+			</File>
+			<File
+				RelativePath=".\ReadMe.txt"
+				>
+			</File>
+			<File
+				RelativePath="C:\Program Files (x86)\Microsoft DirectX SDK (February 2010)\Include\rmxfguid.h"
+				>
+			</File>
+			<File
+				RelativePath="C:\Program Files (x86)\Microsoft DirectX SDK (February 2010)\Include\rmxftmpl.h"
+				>
+			</File>
+			<File
+				RelativePath="C:\Program Files (x86)\Microsoft DirectX SDK (February 2010)\Include\rpcsal.h"
+				>
+			</File>
+			<File
+				RelativePath="C:\Program Files (x86)\Microsoft DirectX SDK (February 2010)\Include\X3DAudio.h"
+				>
+			</File>
+			<File
+				RelativePath="C:\Program Files (x86)\Microsoft DirectX SDK (February 2010)\Include\xact3.h"
+				>
+			</File>
+			<File
+				RelativePath="C:\Program Files (x86)\Microsoft DirectX SDK (February 2010)\Include\xact3d3.h"
+				>
+			</File>
+			<File
+				RelativePath="C:\Program Files (x86)\Microsoft DirectX SDK (February 2010)\Include\xact3wb.h"
+				>
+			</File>
+			<File
+				RelativePath="C:\Program Files (x86)\Microsoft DirectX SDK (February 2010)\Include\XAPO.h"
+				>
+			</File>
+			<File
+				RelativePath="C:\Program Files (x86)\Microsoft DirectX SDK (February 2010)\Include\XAPOBase.h"
+				>
+			</File>
+			<File
+				RelativePath="C:\Program Files (x86)\Microsoft DirectX SDK (February 2010)\Include\XAPOFX.h"
+				>
+			</File>
+			<File
+				RelativePath="C:\Program Files (x86)\Microsoft DirectX SDK (February 2010)\Include\XAudio2.h"
+				>
+			</File>
+			<File
+				RelativePath="C:\Program Files (x86)\Microsoft DirectX SDK (February 2010)\Include\XAudio2fx.h"
+				>
+			</File>
+			<File
+				RelativePath="C:\Program Files (x86)\Microsoft DirectX SDK (February 2010)\Include\XDSP.h"
+				>
+			</File>
+			<File
+				RelativePath="C:\Program Files (x86)\Microsoft DirectX SDK (February 2010)\Include\XInput.h"
+				>
+			</File>
+			<File
+				RelativePath="C:\Program Files (x86)\Microsoft DirectX SDK (February 2010)\Include\xma2defs.h"
+				>
+			</File>
+			<File
+				RelativePath="C:\Program Files (x86)\Microsoft DirectX SDK (February 2010)\Include\xnamath.h"
+				>
+			</File>
+			<File
+				RelativePath="C:\Program Files (x86)\Microsoft DirectX SDK (February 2010)\Include\xnamathconvert.inl"
+				>
+			</File>
+			<File
+				RelativePath="C:\Program Files (x86)\Microsoft DirectX SDK (February 2010)\Include\xnamathmatrix.inl"
+				>
+			</File>
+			<File
+				RelativePath="C:\Program Files (x86)\Microsoft DirectX SDK (February 2010)\Include\xnamathmisc.inl"
+				>
+			</File>
+			<File
+				RelativePath="C:\Program Files (x86)\Microsoft DirectX SDK (February 2010)\Include\xnamathvector.inl"
+				>
+			</File>
+		</Filter>
+	</Files>
+	<Globals>
+	</Globals>
+</VisualStudioProject>
