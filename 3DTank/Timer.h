@@ -1,21 +1,38 @@
+//////////////////////////////////////////////////////////////////////////////////////
+//
+//  FileName    :   Timer.h
+//  Version     :   1.0
+//  Creater     :   weibin Huang
+//  Date        :   2013-07-04 21:06
+//  Comment     :   Container of Texture
+//
+//////////////////////////////////////////////////////////////////////////////////////
+
 #ifndef TIMER_INCLUDE
 #define TIMER_INCLUDE
 
-class Timer
+class CTimer
 {
-	bool m_bUseLargeTime;
-	__int64 m_int64OneSecondTicks;
-	__int64 m_int64TimeTickStartCounts;
-	unsigned long m_ulTimeStart;
-	int m_iFrameCount;
-	float m_fFPS;
-	float m_fTime1,m_fTime2,m_fTimeSlice;
 public:
-	Timer(void);
-	~Timer(void);
-	void InitTime();
+
+	static CTimer* GetInstance(void);
+
+	int  InitTime();
+	void  UpdateFPS();
 	float GetGamePlayTime();
-	void UpdateFPS();
-	inline float GetFPS(){return m_fFPS;}
+	float GetFPS();
+
+private:
+	CTimer(void);
+	~CTimer(void);
+
+	int				m_nFrameCount;
+	bool			m_bUseLargeTime;
+	float			m_fFPS;
+	float			m_fTime1,m_fTime2,m_fTimeSlice;
+	__int64 		m_lld64OneSecondTicks;
+	__int64 		m_lldTimeTickStartCounts;
+	unsigned long	m_ulTimeStart;
+	
 };
 #endif

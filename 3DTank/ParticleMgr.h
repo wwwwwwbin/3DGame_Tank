@@ -13,9 +13,9 @@ public:
 	CParticleMgr(void);
 	~CParticleMgr(void);
 
-	CParticle* CreateParticle(int nNumOfParticle, IDirect3DTexture9* pParticleTexture);
+	CParticle* CreateParticle(int nNumOfParticle, int nTextureID);
 
 	void Update(void);
-	void Render(void);
+	int Render(void);
 
 };

@@ -7,6 +7,7 @@ extern HINSTANCE g_hInstance;
 
 CGraphicsEngine::CGraphicsEngine(void)
 : m_pIDirect3DDevice(NULL)
+, m_pDXSoundMgr(NULL)
 , m_pVertexBuffer(NULL)
 , m_pCamera(NULL)
 , m_nNumOfBillboard(0)
@@ -87,7 +88,7 @@ int CGraphicsEngine::CreateD3DDevice( HWND hWnd,bool bFullScreen /*= true*/ )
 	}
 	// 初始化摄像机
 	m_pCamera = CCamera::GetInstance(CAMERA_TYPE_LANDOBJECT);
-	CHECK_FAILD_JUMP(m_pCamera);
+	LOG_FAILD_JUMP(m_pCamera);
 
 	m_pCamera->SetPosition(D3DXVECTOR3(20.f,100.f,0.f));
 	m_pCamera->SetLook(D3DXVECTOR3(-1.f,0.f,0.f));
@@ -127,8 +128,13 @@ void CGraphicsEngine::Direct3DRelease()
 	SafeRelease(m_pIDirect3DDevice);
 }
 
-void CGraphicsEngine::Render( void )
+int CGraphicsEngine::Render( void )
 {
+	int nResult  = FALSE;
+	int nRetCode = FALSE;
+
+	IDirect3DTexture9* pTexture = NULL;
+
 	if(m_bNeedBuiltVertexBuffer == true){
 		BuiltVertexBuffer();
 	}
@@ -157,8 +163,12 @@ void CGraphicsEngine::Render( void )
 	m_pIDirect3DDevice->SetTransform(D3DTS_WORLD,&m_mtrIdentity);	// 因为Quad直接采用世界坐标且不会改变，要将变换矩阵设为单位矩阵
 	m_pIDirect3DDevice->SetStreamSource(0,m_pVertexBuffer,0,sizeof(CQuad::QuadVertex));
 	m_pIDirect3DDevice->SetFVF(CQuad::QuadVertex::FVF);
-	for(int i = 0 ; i < m_nNumOfQuad ; ++i){
-		m_pIDirect3DDevice->SetTexture(0,m_vQuads[i]->m_pTexture);
+	for (int i = 0 ; i < m_nNumOfQuad ; ++i)
+	{
+		pTexture = GetTexture(m_vQuads[i]->m_nTextureID);
+		LOG_FAILD_JUMP(pTexture);
+
+		m_pIDirect3DDevice->SetTexture(0, pTexture);
 		m_pIDirect3DDevice->DrawPrimitive(D3DPT_TRIANGLELIST,i*6,2);
 	}
 
@@ -179,6 +189,10 @@ void CGraphicsEngine::Render( void )
 	m_pIDirect3DDevice->Present(NULL,NULL,NULL,NULL);
 	m_nNumOfModel = 0;
 	m_nNumOfBillboard = 0;
+	
+	nResult = true;
+Exit0:
+	return nResult;
 }
 
 CGraphicsEngine* CGraphicsEngine::GetInstance( void )
@@ -228,29 +242,40 @@ void CGraphicsEngine::CameraPointRotate( float nPosX,float nPosY,float nPosZ,flo
 	CameraPointRotate(tmp,fAngle);
 }
 
-bool CGraphicsEngine::Initialize( void )
+int CGraphicsEngine::Initialize( void )
 {
 	int nResult  = FALSE;
 	int nRetCode = FALSE;
 
 	// 初始化输入
 	m_pDXInput = DX_Input::GetInstance();
-	CHECK_FAILD_JUMP(m_pDXInput);
+	LOG_FAILD_JUMP(m_pDXInput);
 
-	if(!m_pDXInput->CreateInput(g_hInstance,g_hWnd)){
+	nRetCode = m_pDXInput->CreateInput(g_hInstance, g_hWnd);
+	if (!nRetCode)
+	{
 		MessageBox(NULL,_T("初始化输入设备失败"),NULL,NULL);
-		return false;
+		goto Exit0;
 	}
 
 	// 初始化声音
+	/*
 	m_pDXSoundMgr = DX_SoundManager::GetSoundManager();
-	m_pDXSoundMgr->Init(g_hWnd);
-	m_pDXSoundMgr->SetPrimaryBufferFormat();
+	LOG_FAILD_JUMP(m_pDXSoundMgr);
 
-	
+	nRetCode = m_pDXSoundMgr->Init(g_hWnd);
+	LOG_FAILD_JUMP(nRetCode);
+
+	nRetCode = m_pDXSoundMgr->SetPrimaryBufferFormat();
+	LOG_FAILD_JUMP(nRetCode);
+	*/
+
 	// 初始化计时器
-	m_pTimer = new Timer();
-	m_pTimer->InitTime();
+	m_pTimer = CTimer::GetInstance();
+	LOG_FAILD_JUMP(m_pTimer);
+
+	nRetCode = m_pTimer->InitTime();
+	LOG_FAILD_JUMP(nRetCode);
 
 	// 创建3D设备
 	if(!CreateD3DDevice(g_hWnd,false)){
@@ -261,14 +286,17 @@ bool CGraphicsEngine::Initialize( void )
 	SetProjection();
 
 	// 设置视口
-	D3DVIEWPORT9 vp = {0,0,SCREEMWIDTH,SCREEMHEIGH,0,1};
-	m_pIDirect3DDevice->SetViewport(&vp);
+	{
+		D3DVIEWPORT9 vp = {0, 0, SCREEMWIDTH, SCREEMHEIGH, 0, 1};
+		m_pIDirect3DDevice->SetViewport(&vp);
 
-	if(FAILED(D3DXCreateSprite(m_pIDirect3DDevice,&m_pSprite))){
-		MessageBox(NULL,"创建精灵接口失败","警告",MB_OK|MB_ICONINFORMATION);
-		return false;
+		if (FAILED(D3DXCreateSprite(m_pIDirect3DDevice,&m_pSprite)))
+		{
+			MessageBox(NULL,"创建精灵接口失败","警告",MB_OK|MB_ICONINFORMATION);
+			return false;
+		}
 	}
-
+	
 	LoadResource();
 
 	m_pParticleMgr = new CParticleMgr();
@@ -276,6 +304,19 @@ bool CGraphicsEngine::Initialize( void )
 
 	nResult = TRUE;
 Exit0:
+	if (!nResult)
+	{
+		if (m_pDXInput)
+		{
+			m_pDXInput->InputRelease();
+			m_pIDirect3DDevice = NULL;
+		}
+		if (m_pDXSoundMgr)
+		{
+			m_pDXSoundMgr->Release();
+			m_pDXSoundMgr = NULL;
+		}
+	}
 	return nResult;
 }
 
@@ -364,4 +405,15 @@ void CGraphicsEngine::AddBillboard( CBillboard* pBillboard )
 	{
 		m_vBillboards[m_nNumOfBillboard++] = pBillboard;
 	}
+}
+
+IDirect3DTexture9* CGraphicsEngine::GetTexture( int nID )
+{
+	LOG_FAILD_JUMP(nID >= TEXTURE_INDEX_BEGIN);
+	LOG_FAILD_JUMP(nID <  TEXTURE_INDEX_END);
+
+	return m_vTextures[nID];
+
+Exit0:
+	return NULL;
 }

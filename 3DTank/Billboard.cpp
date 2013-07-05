@@ -16,8 +16,8 @@ int CBillboard::Init( int nTextureID, D3DXVECTOR3& pos )
 {
 	int nResult = FALSE;
 
-	CHECK_FAILD_JUMP(nTextureID >= TEXTURE_INDEX_BEGIN);
-	CHECK_FAILD_JUMP(nTextureID < TEXTURE_INDEX_END);
+	LOG_FAILD_JUMP(nTextureID >= TEXTURE_INDEX_BEGIN);
+	LOG_FAILD_JUMP(nTextureID < TEXTURE_INDEX_END);
 
 	m_nTextureID = nTextureID;
 	SetPosition(pos.x, pos.y, pos.z);

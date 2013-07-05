@@ -188,6 +188,14 @@
 				>
 			</File>
 			<File
+				RelativePath=".\LogSystem.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\LogSystem.h"
+				>
+			</File>
+			<File
 				RelativePath=".\Main.cpp"
 				>
 			</File>

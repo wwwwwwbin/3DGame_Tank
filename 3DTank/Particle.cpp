@@ -5,7 +5,8 @@
 inline DWORD FToW(float f){return *((DWORD*)&f);}
 
 CParticle::CParticle(void)
-: m_bIsDead(false)
+: m_nTextureID(0)
+, m_bIsDead(false)
 {
 }
 
@@ -14,28 +15,42 @@ CParticle::~CParticle(void)
 	UnInit();
 }
 
-bool CParticle::Init( int nNumOfParticle, IDirect3DTexture9* pParticleTexture )
+int CParticle::Init( int nNumOfParticle, int nTextureID )
 {
-	m_nNumOfParticles = nNumOfParticle;
-	m_pParticles = new PARTICLE[m_nNumOfParticles];
-	if (!m_pParticles)
-		return false;
-	m_pParticleTexture = pParticleTexture;
-	m_lVertexBufOffset = 0;
-	m_lBolckSize = 500;
+	int		nResult  = FALSE;
+	HRESULT hRetCode = E_FAIL;
 
-	CGraphicsEngine* pEngine = CGraphicsEngine::GetInstance();
-	if (FAILED(pEngine->GetD3DDevice()->CreateVertexBuffer(
+	CGraphicsEngine* pEngine = NULL;
+
+	LOG_FAILD_JUMP(nTextureID >= TEXTURE_INDEX_BEGIN);
+	LOG_FAILD_JUMP(nTextureID <  TEXTURE_INDEX_END);
+
+	pEngine = CGraphicsEngine::GetInstance();
+	LOG_FAILD_JUMP(pEngine);
+	
+	m_nNumOfParticles = nNumOfParticle;
+
+	m_pParticles = new PARTICLE[m_nNumOfParticles];
+	LOG_FAILD_JUMP(m_pParticles);
+
+	m_nTextureID = nTextureID;
+
+	m_lVertexBufOffset	= 0;
+	m_lBolckSize		= 500;
+
+	hRetCode = pEngine->GetD3DDevice()->CreateVertexBuffer(
 		m_nNumOfParticles * sizeof(PARTICLE_RENDERSTRUCT),
 		D3DUSAGE_DYNAMIC | D3DUSAGE_POINTS | D3DUSAGE_WRITEONLY,
 		PARTICLE_FVF, 
 		D3DPOOL_DEFAULT, 
 		&m_pParticleVertexBuf,
 		NULL
-	)))
+	);
+
+	if (FAILED(hRetCode))
 	{
 		MessageBox(NULL, "创建粒子缓冲区失败", "error", NULL);
-		return false;
+		goto Exit0;
 	}
 
 	SetPosition(0.f, 20.f, 40.f);
@@ -45,7 +60,13 @@ bool CParticle::Init( int nNumOfParticle, IDirect3DTexture9* pParticleTexture )
 	SetMass(5.25f);
 	SetRadius(0.1f);
 
-	return true;
+	nResult = TRUE;
+Exit0:
+	if (!nResult)
+	{
+		UnInit();
+	}
+	return nResult;
 }
 
 void CParticle::CreateParticle( float fVx, float fVy, float fVz )
@@ -62,19 +83,18 @@ void CParticle::CreateParticle( float fVx, float fVy, float fVz )
 	if (nDeadIndex == -1)
 		return ;
 
-	m_pParticles[nDeadIndex].m_fLife = m_fLife;
-	m_pParticles[nDeadIndex].m_vPosition = m_vPosition;
-	m_pParticles[nDeadIndex].m_fFriction = m_fFriction;
-	m_pParticles[nDeadIndex].m_Color = m_Color;
-	m_pParticles[nDeadIndex].m_fMass = m_fMass;
-
-	m_pParticles[nDeadIndex].m_vVelocity = D3DXVECTOR3(fVx, fVy, fVz);
+	m_pParticles[nDeadIndex].m_fLife		= m_fLife;
+	m_pParticles[nDeadIndex].m_vPosition	= m_vPosition;
+	m_pParticles[nDeadIndex].m_fFriction	= m_fFriction;
+	m_pParticles[nDeadIndex].m_Color		= m_Color;
+	m_pParticles[nDeadIndex].m_fMass		= m_fMass;
+	m_pParticles[nDeadIndex].m_vVelocity	= D3DXVECTOR3(fVx, fVy, fVz);
 }
 
 void CParticle::UpdataParticle( void )
 {
-	int nRandom = 0;
-	bool bHasParticle = false;
+	int  nRandom  = 0;
+	bool bDead	  = true;
 
 	for (int i = 0; i < m_nNumOfParticles; ++i)
 	{
@@ -93,12 +113,11 @@ void CParticle::UpdataParticle( void )
 			else
 				m_pParticles[i].m_Color = COLOR_C;
 
-			bHasParticle = true;
+			bDead = false;
 		}
 	}
 
-	if (!bHasParticle)
-		m_bIsDead = true;
+ 	m_bIsDead = bDead;
 }
 
 void CParticle::SetParticleRS( void )
@@ -106,6 +125,7 @@ void CParticle::SetParticleRS( void )
 	IDirect3DDevice9* pDevice = NULL;
 
 	pDevice = CGraphicsEngine::GetInstance()->GetD3DDevice();
+	assert(pDevice);
 
 	pDevice->SetRenderState(D3DRS_LIGHTING, false);
 	pDevice->SetRenderState(D3DRS_POINTSPRITEENABLE, true);
@@ -128,31 +148,51 @@ void CParticle::UnSetParticleRS( void )
 	IDirect3DDevice9* pDevice = NULL;
 
 	pDevice = CGraphicsEngine::GetInstance()->GetD3DDevice();
+	assert(pDevice);
 
 	pDevice->SetRenderState(D3DRS_POINTSPRITEENABLE, false);
 	pDevice->SetRenderState(D3DRS_POINTSCALEENABLE, false);
 	pDevice->SetRenderState(D3DRS_ALPHABLENDENABLE, false);
 }
 
-void CParticle::Render( void )
+int CParticle::Render( void )
 {
-	IDirect3DDevice9* pDevice = NULL;
+	int		nResult  = FALSE;
+	HRESULT hRetCode = E_FAIL;
+	
+	IDirect3DDevice9*		pDevice		= NULL;
+	IDirect3DTexture9*		pTexture	= NULL;
+	PARTICLE_RENDERSTRUCT*	pVertexBuf	= NULL;
+
+	LOG_FAILD_JUMP(m_nTextureID >= TEXTURE_INDEX_BEGIN);
+	LOG_FAILD_JUMP(m_nTextureID <  TEXTURE_INDEX_END);
 
 	pDevice = CGraphicsEngine::GetInstance()->GetD3DDevice();
+	LOG_FAILD_JUMP(pDevice);
 
 	pDevice->SetFVF(PARTICLE_FVF);
-	if (m_pParticleTexture)
-	{
-		pDevice->SetTexture(0, m_pParticleTexture);
-	}
-	pDevice->SetStreamSource(0, m_pParticleVertexBuf, 0, sizeof(PARTICLE_RENDERSTRUCT));
-	if (m_lVertexBufOffset >= (long)(m_nNumOfParticles * sizeof(PARTICLE_RENDERSTRUCT)))
-		m_lVertexBufOffset = 0;
 
-	PARTICLE_RENDERSTRUCT* pVertexBuf =NULL;
-	m_pParticleVertexBuf->Lock( m_lVertexBufOffset * sizeof(PARTICLE_RENDERSTRUCT), 
-								m_lBolckSize * sizeof(PARTICLE_RENDERSTRUCT), 
-								(void**)&pVertexBuf, D3DLOCK_DISCARD);
+	pTexture = CGraphicsEngine::GetInstance()->GetTexture(m_nTextureID);
+	LOG_FAILD_JUMP(pTexture);
+
+	hRetCode = pDevice->SetTexture(0, pTexture);
+	LOG_HRESULT_FAILD_JUMP(hRetCode);
+
+	hRetCode = pDevice->SetStreamSource(0, m_pParticleVertexBuf, 0, sizeof(PARTICLE_RENDERSTRUCT));
+	LOG_HRESULT_FAILD_JUMP(hRetCode);
+
+	if (m_lVertexBufOffset >= (long)(m_nNumOfParticles * sizeof(PARTICLE_RENDERSTRUCT)))
+	{
+		m_lVertexBufOffset = 0;
+	}
+
+	hRetCode = m_pParticleVertexBuf->Lock(
+		m_lVertexBufOffset * sizeof(PARTICLE_RENDERSTRUCT), 
+		m_lBolckSize * sizeof(PARTICLE_RENDERSTRUCT), 
+		(void**)&pVertexBuf, D3DLOCK_DISCARD
+	);
+	//LOG_FAILD_JUMP(hRetCode == D3D_OK);
+
 	long lNumInBlock = 0;
 	for (int i = 0; i < m_nNumOfParticles; ++i)
 	{
@@ -165,11 +205,18 @@ void CParticle::Render( void )
 			if (lNumInBlock >= m_lBolckSize)
 			{
 				m_pParticleVertexBuf->Unlock();
-				pDevice->DrawPrimitive(D3DPT_POINTLIST, m_lVertexBufOffset, m_lBolckSize);
+				hRetCode = pDevice->DrawPrimitive(D3DPT_POINTLIST, m_lVertexBufOffset, m_lBolckSize);
+				LOG_HRESULT_FAILD_JUMP(hRetCode);
+
 				m_lVertexBufOffset += m_lBolckSize;
-				m_pParticleVertexBuf->Lock( m_lVertexBufOffset * sizeof(PARTICLE_RENDERSTRUCT), 
-										   m_lBolckSize * sizeof(PARTICLE_RENDERSTRUCT), 
-										   (void**)&pVertexBuf, D3DLOCK_DISCARD);
+				hRetCode = m_pParticleVertexBuf->Lock(
+					m_lVertexBufOffset * sizeof(PARTICLE_RENDERSTRUCT), 
+					m_lBolckSize * sizeof(PARTICLE_RENDERSTRUCT), 
+					(void**)&pVertexBuf, 
+					D3DLOCK_DISCARD
+				);
+				//LOG_FAILD_JUMP(hRetCode == D3D_OK);
+
 				lNumInBlock = 0;
 			}
 		}
@@ -177,9 +224,14 @@ void CParticle::Render( void )
 	m_pParticleVertexBuf->Unlock();
 	if (lNumInBlock)
 	{
-		pDevice->DrawPrimitive(D3DPT_POINTLIST, m_lVertexBufOffset, lNumInBlock);
+		hRetCode = pDevice->DrawPrimitive(D3DPT_POINTLIST, m_lVertexBufOffset, lNumInBlock);
+		LOG_HRESULT_FAILD_JUMP(hRetCode);
 	}
 	m_lVertexBufOffset = 0;
+
+	nResult = TRUE;
+Exit0:
+	return nResult;
 }
 
 void CParticle::Explode( D3DXVECTOR3 vPosition )
@@ -187,27 +239,24 @@ void CParticle::Explode( D3DXVECTOR3 vPosition )
 	float fAlfa = 0.f;
 	float fBeta = 0.f;
 
-	m_fLife = 10.f;
-	m_fRadius = 0.05f;
+	m_fLife		= 10.f;
+	m_fRadius	= 0.05f;
 	m_vPosition = vPosition;
 
-	int nNumOfParticles = m_nNumOfParticles;
-
-	while(nNumOfParticles > 0)
+	for (int i = 0; i < m_nNumOfParticles;  ++i)
 	{
 		fBeta = fRANDOM * D3DX_PI/2.f;
 		fAlfa = fRANDOM * 2.f * D3DX_PI;
 
-// 		cosf(fBeta) * sinf(fAlfa) * (m_fRadius * fRANDOM), 
-// 		cosf(fBeta) * cosf(fAlfa) * (m_fRadius * fRANDOM),
-// 		sinf(fBeta) * (m_fRadius * fRANDOM)
+		// 		cosf(fBeta) * sinf(fAlfa) * (m_fRadius * fRANDOM), 
+		// 		cosf(fBeta) * cosf(fAlfa) * (m_fRadius * fRANDOM),
+		// 		sinf(fBeta) * (m_fRadius * fRANDOM)
 
 		CreateParticle( 
 			cosf(fBeta) * sinf(fAlfa) * (m_fRadius * fRANDOM), 
 			cosf(fBeta) * cosf(fAlfa) * (m_fRadius * fRANDOM),
 			cosf(fBeta) * sinf(fRANDOM * 2.f * D3DX_PI) * (m_fRadius * fRANDOM)
 		);
-		--nNumOfParticles;
 	}
 }
 
@@ -267,7 +316,7 @@ void CParticle::Fire( D3DXVECTOR3 vStart, D3DXVECTOR3 vDirection )
 			cosf(fBeta) * sinf(fAlfa) * (m_fRadius * fRANDOM), 
 			cosf(fBeta) * cosf(fAlfa) * (m_fRadius * fRANDOM),
 			cosf(fBeta) * sinf(fRANDOM * 2.f * D3DX_PI) * (m_fRadius * fRANDOM)
-			);
+		);
 
 		vPosition -= vDelta;
 	}
@@ -275,6 +324,59 @@ void CParticle::Fire( D3DXVECTOR3 vStart, D3DXVECTOR3 vDirection )
 
 void CParticle::UnInit( void )
 {
-	delete[] m_pParticles;
+	if (m_pParticles)
+	{
+		delete[] m_pParticles;
+	}
 	SafeRelease(m_pParticleVertexBuf);
+}
+
+void CParticle::SetLife( float fLife )
+{
+	m_fLife = fLife;
+}
+
+void CParticle::SetMass( float fMass )
+{
+	m_fMass = fMass;
+}
+
+void CParticle::SetPosition( float fX, float fY, float fZ )
+{
+	m_vPosition = D3DXVECTOR3(fX, fY, fZ);
+}
+
+void CParticle::SetColor( int r, int g, int b )
+{
+	m_Color = D3DCOLOR_XRGB(r, g, b);
+}
+
+void CParticle::SetFriction( float fFrition )
+{
+	m_fFriction = fFrition;
+}
+
+void CParticle::SetGravity( float fX, float fY, float fZ )
+{
+	m_vGravity = D3DXVECTOR3(fX, fY, fZ);
+}
+
+void CParticle::SetRadius( float fRadius )
+{
+	m_fRadius = fRadius;
+}
+
+bool CParticle::IsDead( void )
+{
+	return m_bIsDead;
+}
+
+CSetParticleRS::CSetParticleRS( void )
+{
+	CParticle::SetParticleRS();
+}
+
+CSetParticleRS::~CSetParticleRS( void )
+{
+	CParticle::UnSetParticleRS();
 }

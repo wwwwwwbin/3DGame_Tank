@@ -24,8 +24,9 @@ class DX_SoundManager
 public:
 	static DX_SoundManager* GetSoundManager();
 
-	int Init(HWND hWnd, DWORD dwCoopLevel = DSSCL_NORMAL);
-	int SetPrimaryBufferFormat(WORD wChannels=1, DWORD dwSamplesPerSec = 22050, WORD wBitsPerSample = 16);
+	int  Init(HWND hWnd, DWORD dwCoopLevel = DSSCL_NORMAL);
+	void Release(void);
+	int  SetPrimaryBufferFormat(WORD wChannels=1, DWORD dwSamplesPerSec = 22050, WORD wBitsPerSample = 16);
 
 	IDirectSound8* GetDirectSound();
 

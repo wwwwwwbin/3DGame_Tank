@@ -10,7 +10,7 @@ CParticleMgr::~CParticleMgr(void)
 {
 }
 
-CParticle* CParticleMgr::CreateParticle( int nNumOfParticle, IDirect3DTexture9* pParticleTexture )
+CParticle* CParticleMgr::CreateParticle( int nNumOfParticle, int nTextureID )
 {
 	CParticle* pNewParticle = NULL;
 
@@ -18,9 +18,7 @@ CParticle* CParticleMgr::CreateParticle( int nNumOfParticle, IDirect3DTexture9* 
 	if (!pNewParticle)
 		return NULL;
 
-	pNewParticle->Init(nNumOfParticle, pParticleTexture);
-
-	
+	pNewParticle->Init(nNumOfParticle, nTextureID);
 
 	m_ParticlsList.push_back(pNewParticle);
 
@@ -30,8 +28,6 @@ CParticle* CParticleMgr::CreateParticle( int nNumOfParticle, IDirect3DTexture9* 
 void CParticleMgr::Update( void )
 {
 	CParticle* pParticle = NULL;
-
-	ParticleList::iterator itDelete;
 	for (ParticleList::iterator it = m_ParticlsList.begin(); it != m_ParticlsList.end();)
 	{
 		pParticle = *it;
@@ -39,28 +35,36 @@ void CParticleMgr::Update( void )
 
 		if (pParticle->IsDead())
 		{
-			itDelete = it;
-			++it;
 			delete pParticle;
-			m_ParticlsList.erase(itDelete);
-		}
-		else
-			++it;
-	}
 
+			it = m_ParticlsList.erase(it);
+			continue;
+		}
+		++it;
+	}
 }
 
-void CParticleMgr::Render( void )
+int CParticleMgr::Render( void )
 {
+	int nResult  = FALSE;
+	int nRetCode = FALSE;
+
 	CParticle* pParticle = NULL;
 
-	CParticle::SetParticleRS();
-	
-	for (ParticleList::iterator it = m_ParticlsList.begin(); it != m_ParticlsList.end(); ++it)
 	{
-		pParticle = *it;
-		pParticle->Render();
-	}
+		CSetParticleRS cRs;
+		for (ParticleList::iterator it = m_ParticlsList.begin(); it != m_ParticlsList.end(); ++it)
+		{
+			pParticle = *it;
+			LOG_FAILD_JUMP(pParticle);
 
-	CParticle::UnSetParticleRS();
+			nRetCode = pParticle->Render();
+			LOG_FAILD_JUMP(nRetCode);
+		}
+	}
+	
+
+	nResult = TRUE;
+Exit0:
+	return nResult;
 }

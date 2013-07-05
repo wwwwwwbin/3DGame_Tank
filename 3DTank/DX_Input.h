@@ -8,7 +8,9 @@ class DX_Input
 public:
 	static DX_Input* GetInstance();
 
-	int CreateInput(HINSTANCE hInst, HWND hWnd);
+	int  CreateInput(HINSTANCE hInst, HWND hWnd);
+	void InputRelease();
+
 	int ReadKeyboard();
 	int ReadMouse();
 	
@@ -27,7 +29,7 @@ private:
 	int  CreateDirectInput(HINSTANCE hInst);
 	int  CreateKeyboard(HWND hInst);
 	int  CreateMouse(HWND hInst);
-	void InputRelease();
+	
 
 	static LPDIRECTINPUT8 ms_pIDirectInput;
 

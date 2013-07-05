@@ -128,7 +128,7 @@ void CSceneMgr::SetSkyBox( void )
 	float fDelta = 0.5;
 
 	m_pQuad[0] = new CQuad();
-	m_pQuad[0]->m_pTexture = CGraphicsEngine::GetInstance()->m_vTextures[TEXTURE_INDEX_LAWN];
+	m_pQuad[0]->m_nTextureID = TEXTURE_INDEX_LAWN;
 	m_pQuad[0]->m_vVertex[0].fPosX = -fBoxPosition;
 	m_pQuad[0]->m_vVertex[0].fPosZ = -fBoxPosition;
 	m_pQuad[0]->m_vVertex[0].fPosY = 0.f;
@@ -155,7 +155,7 @@ void CSceneMgr::SetSkyBox( void )
 	CGraphicsEngine::GetInstance()->AddQuad(m_pQuad[0]);
 
 	m_pQuad[1] = new CQuad();
-	m_pQuad[1]->m_pTexture = CGraphicsEngine::GetInstance()->m_vTextures[TEXTURE_INDEX_BOX_FONT];
+	m_pQuad[1]->m_nTextureID = TEXTURE_INDEX_BOX_FONT;
 	m_pQuad[1]->m_vVertex[0].fPosX = -fBoxPosition;
 	m_pQuad[1]->m_vVertex[0].fPosZ = -fBoxPosition - fDelta;
 	m_pQuad[1]->m_vVertex[0].fPosY = fBoxHeigh;
@@ -182,7 +182,7 @@ void CSceneMgr::SetSkyBox( void )
 	CGraphicsEngine::GetInstance()->AddQuad(m_pQuad[1]);
 
 	m_pQuad[2] = new CQuad();
-	m_pQuad[2]->m_pTexture = CGraphicsEngine::GetInstance()->m_vTextures[TEXTURE_INDEX_BOX_LEFT];
+	m_pQuad[2]->m_nTextureID = TEXTURE_INDEX_BOX_LEFT;
 	m_pQuad[2]->m_vVertex[0].fPosX = fBoxPosition + fDelta;
 	m_pQuad[2]->m_vVertex[0].fPosZ = -fBoxPosition;
 	m_pQuad[2]->m_vVertex[0].fPosY = fBoxHeigh;
@@ -209,7 +209,7 @@ void CSceneMgr::SetSkyBox( void )
 	CGraphicsEngine::GetInstance()->AddQuad(m_pQuad[2]);
 
 	m_pQuad[3] = new CQuad();
-	m_pQuad[3]->m_pTexture = CGraphicsEngine::GetInstance()->m_vTextures[TEXTURE_INDEX_BOX_BACK];
+	m_pQuad[3]->m_nTextureID = TEXTURE_INDEX_BOX_BACK;
 	m_pQuad[3]->m_vVertex[0].fPosX = fBoxPosition;
 	m_pQuad[3]->m_vVertex[0].fPosZ = fBoxPosition + fDelta;
 	m_pQuad[3]->m_vVertex[0].fPosY = fBoxHeigh;
@@ -236,7 +236,7 @@ void CSceneMgr::SetSkyBox( void )
 	CGraphicsEngine::GetInstance()->AddQuad(m_pQuad[3]);
 
 	m_pQuad[4] = new CQuad();
-	m_pQuad[4]->m_pTexture = CGraphicsEngine::GetInstance()->m_vTextures[TEXTURE_INDEX_BOX_RIGHT];
+	m_pQuad[4]->m_nTextureID = TEXTURE_INDEX_BOX_RIGHT;
 	m_pQuad[4]->m_vVertex[0].fPosX = -fBoxPosition - fDelta;
 	m_pQuad[4]->m_vVertex[0].fPosZ = fBoxPosition;
 	m_pQuad[4]->m_vVertex[0].fPosY = fBoxHeigh;
@@ -262,6 +262,7 @@ void CSceneMgr::SetSkyBox( void )
 	m_pQuad[4]->m_vVertex[3].fTexY = 1.f;
 	CGraphicsEngine::GetInstance()->AddQuad(m_pQuad[4]);
 
+	/*
 	m_pQuad[0] = new CQuad();
 	m_pQuad[0]->m_pTexture = CGraphicsEngine::GetInstance()->m_vTextures[TEXTURE_INDEX_BOX_TOP];
 	m_pQuad[0]->m_vVertex[0].fPosX = fBoxPosition;
@@ -288,4 +289,5 @@ void CSceneMgr::SetSkyBox( void )
 	m_pQuad[0]->m_vVertex[3].fTexX = 0.f;
 	m_pQuad[0]->m_vVertex[3].fTexY = 1.f;
 	CGraphicsEngine::GetInstance()->AddQuad(m_pQuad[0]);
+	*/
 }

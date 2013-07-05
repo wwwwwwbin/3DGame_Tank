@@ -20,10 +20,10 @@ int CTree::Init( void )
 	D3DXVECTOR3 treeDefalut(50, 50, 0);
 
 	m_pBillboard = new CBillboard();
-	CHECK_FAILD_JUMP(m_pBillboard);
+	LOG_FAILD_JUMP(m_pBillboard);
 
 	nRetCode = m_pBillboard->Init(TEXTURE_INDEX_TREE, treeDefalut);
-	CHECK_FAILD_JUMP(nRetCode);
+	LOG_FAILD_JUMP(nRetCode);
 
 	nResult = TRUE;
 Exit0:

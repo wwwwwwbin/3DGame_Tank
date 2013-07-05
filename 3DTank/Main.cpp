@@ -49,7 +49,12 @@ int APIENTRY _tWinMain(HINSTANCE hInstance,
 
 	hAccelTable = LoadAccelerators(hInstance, MAKEINTRESOURCE(IDC_MY3DTANK));
 	g_hInstance = hInstance;
-	gameApp.Initialize();
+	
+	if (!gameApp.Initialize())
+	{
+		gameApp.Exit();
+		return 0;
+	}
 
 	ShowCursor(true);
 	//AllocConsole();
@@ -65,6 +70,7 @@ int APIENTRY _tWinMain(HINSTANCE hInstance,
 		gameApp.Run();
 	}
 
+	gameApp.Exit();
 	return (int) msg.wParam;
 }
 

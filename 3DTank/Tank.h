@@ -17,7 +17,7 @@ private:
 public:
 	CTank(float fX,float fY,float fZ);
 	~CTank(void);
-	void Updata(void);
+	int Updata(void);
 	void Render(void);
 
 	void Fire(void);

@@ -17,17 +17,17 @@ public:
 	static const int MAX_QUAD_SIZE = 64;
 	static const int MAX_BILLBOARD_SIZE = 64;
 
+	IDirect3DTexture9* GetTexture(int nID);
+
 public:
-	
-	IDirect3DTexture9* m_vTextures[TEXTURE_INDEX_SIZE];
-	
+		
 	CCamera* m_pCamera;
-	Timer* m_pTimer;
+	CTimer* m_pTimer;
 	DX_Input* m_pDXInput;
 	DX_SoundManager* m_pDXSoundMgr;
 	CParticleMgr* m_pParticleMgr;
 	
-	bool Initialize(void);
+	int Initialize(void);
 	static CGraphicsEngine* GetInstance(void);
 	IDirect3DDevice9* GetD3DDevice(void){return m_pIDirect3DDevice;}
 
@@ -49,10 +49,12 @@ public:
 	void CameraPointRotate(float nPosX,float nPosY,float nPosZ,float fAngle);
 
 	void Direct3DRelease(); 
-	void Render(void);
+	int Render(void);
 
 private:
 	
+	IDirect3DTexture9* m_vTextures[TEXTURE_INDEX_SIZE];
+
 	ID3DXSprite* m_pSprite;
 	IDirect3D9* m_pIDirect3D;
 	IDirect3DDevice9* m_pIDirect3DDevice;

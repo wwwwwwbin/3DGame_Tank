@@ -1,23 +1,32 @@
+//////////////////////////////////////////////////////////////////////////////////////
+//
+//  FileName    :   TextureMgr.cpp
+//  Version     :   1.0
+//  Creater     :   weibin Huang
+//  Date        :   2013-07-04 20:13
+//  Comment     :   Container of Texture
+//
+//////////////////////////////////////////////////////////////////////////////////////
+
 #include "StdAfx.h"
 #include "TextureMgr.h"
 
 TextureMgr::TextureMgr(void)
 {
+	m_FilePathMap.clear();
 }
 
 TextureMgr::~TextureMgr(void)
 {
-}
+	TextureRefMap::iterator itEnd = m_FilePathMap.end();
 
-int TextureMgr::Init( void )
-{
-	int nResult  = false;
-	int nRetCode = false;
+	for (TextureRefMap::iterator it = m_FilePathMap.begin(); it != itEnd; ++it)
+	{
+		TextureRef& ref = it->second;
+		SafeRelease(ref.pTexture);
+	}
 
-
-	nResult = true;
-Exit0:
-	return nResult;
+	m_FilePathMap.clear();
 }
 
 int TextureMgr::LoadTexture( IDirect3DDevice9* pDevice, const LPCSTR cpFilePath, int& nReference )
@@ -29,9 +38,9 @@ int TextureMgr::LoadTexture( IDirect3DDevice9* pDevice, const LPCSTR cpFilePath,
 
 	TextureRefMap::iterator itFind;
 
-	CHECK_FAILD_JUMP(pDevice);
-	CHECK_FAILD_JUMP(cpFilePath);
-	CHECK_FAILD_JUMP(cpFilePath[0]);
+	LOG_FAILD_JUMP(pDevice);
+	LOG_FAILD_JUMP(cpFilePath);
+	LOG_FAILD_JUMP(cpFilePath[0]);
 
 	itFind = m_FilePathMap.find(std::string(cpFilePath));
 
@@ -45,7 +54,7 @@ int TextureMgr::LoadTexture( IDirect3DDevice9* pDevice, const LPCSTR cpFilePath,
 		IDirect3DTexture9* pTexture = NULL;
 
 		hr = D3DXCreateTextureFromFile(pDevice, cpFilePath, &pTexture);
-		CHECK_FAILD_JUMP(hr == D3D_OK);
+		LOG_FAILD_JUMP(hr == D3D_OK);
 
 		TextureRef ref;
 		ref.pTexture = pTexture;
@@ -66,9 +75,9 @@ int TextureMgr::GetTexture( const LPCSTR cpFilePath, IDirect3DTexture9** ppOutpu
 
 	TextureRefMap::iterator itFind;
 
-	CHECK_FAILD_JUMP(cpFilePath);
-	CHECK_FAILD_JUMP(cpFilePath[0]);
-	CHECK_FAILD_JUMP(ppOutput);
+	LOG_FAILD_JUMP(cpFilePath);
+	LOG_FAILD_JUMP(cpFilePath[0]);
+	LOG_FAILD_JUMP(ppOutput);
 
 	itFind = m_FilePathMap.find(cpFilePath);
 
@@ -90,8 +99,8 @@ int TextureMgr::UnLoadTexture( const LPCSTR cpFilePath )
 
 	TextureRefMap::iterator itFind;
 
-	CHECK_FAILD_JUMP(cpFilePath);
-	CHECK_FAILD_JUMP(cpFilePath[0]);
+	LOG_FAILD_JUMP(cpFilePath);
+	LOG_FAILD_JUMP(cpFilePath[0]);
 
 	itFind = m_FilePathMap.find(cpFilePath);
 

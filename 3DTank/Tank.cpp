@@ -34,9 +34,15 @@ CTank::~CTank(void)
 	delete m_pBottomModel;
 }
 
-void CTank::Updata( void )
+int CTank::Updata( void )
 {
-	CGraphicsEngine* pEngine = CGraphicsEngine::GetInstance();
+	int nResult  = false;
+	int nRetCode = false;
+	
+	CGraphicsEngine* pEngine = NULL;
+	
+	pEngine = CGraphicsEngine::GetInstance();
+	LOG_FAILD_JUMP(pEngine);
 
 	if(pEngine->m_pDXInput->ReadKeyboard()){
 		if(pEngine->m_pDXInput->IsKeyPressed(DIK_A)){
@@ -65,7 +71,8 @@ void CTank::Updata( void )
 			ChangeDirectionLook(0.02f);
 			pEngine->CameraPointRotate(m_vPosition,0.02f);
 		}
-		if(pEngine->m_pDXInput->IsKeyPressed(DIK_SPACE)){
+		if (pEngine->m_pDXInput->IsKeyPressed(DIK_SPACE))
+		{
 			static float fLastFireTime = pEngine->m_pTimer->GetGamePlayTime();
 
 			float fPostTime = pEngine->m_pTimer->GetGamePlayTime();
@@ -79,15 +86,22 @@ void CTank::Updata( void )
 				vFirePosition = m_vPosition + (m_vDirectionLook * 20);
 				vFirePosition.y += 8;
 
-				CParticle* pParticle = NULL;
-				pParticle = pEngine->m_pParticleMgr->CreateParticle(500, pEngine->m_vTextures[TEXTURE_INDEX_PARTICLE]);
-				//pParticle->Explode(vFirePosition);
-				//pParticle->Shoot(vFirePosition, m_vDirectionLook);
-				pParticle->Fire(vFirePosition, m_vDirectionLook);
+				CParticle*	pParticle = NULL;
 
+				pParticle = pEngine->m_pParticleMgr->CreateParticle(500, TEXTURE_INDEX_PARTICLE);
+				if (pParticle)
+				{
+					//pParticle->Explode(vFirePosition);
+					//pParticle->Shoot(vFirePosition, m_vDirectionLook);
+					pParticle->Fire(vFirePosition, m_vDirectionLook);
+				}
 			}
 		}
 	}
+
+	nResult = true;
+Exit0:
+	return nResult;
 }
 
 void CTank::Render( void )

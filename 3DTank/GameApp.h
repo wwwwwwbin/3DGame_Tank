@@ -13,7 +13,8 @@ private:
 public:
 	CGameApp(void);
 	~CGameApp(void);
-	bool Initialize(void);
+	int  Initialize(void);
 	void Run(void);
+	void Exit(void);
 };
 

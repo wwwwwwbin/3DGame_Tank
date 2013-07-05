@@ -8,6 +8,13 @@
 #define COLOR_C (D3DCOLOR_XRGB(255,138,0))
 
 
+class CSetParticleRS
+{
+public:
+	CSetParticleRS(void);
+	~CSetParticleRS(void);
+};
+
 class CParticle
 {
 	struct PARTICLE_RENDERSTRUCT
@@ -25,31 +32,17 @@ class CParticle
 		float m_fMass;
 		float m_fFriction;
 	};
-private:
-	IDirect3DTexture9* m_pParticleTexture;
-	IDirect3DVertexBuffer9* m_pParticleVertexBuf;
-	PARTICLE* m_pParticles;
-	int m_nNumOfParticles;
-	D3DXVECTOR3 m_vPosition;
-	float m_fLife;
-	float m_fMass;
-	D3DCOLOR m_Color;
-	float m_fFriction;
-	D3DXVECTOR3 m_vGravity;
-	float m_fRadius;
-	long m_lVertexBufOffset;
-	long m_lBolckSize;
-
-	bool m_bIsDead;
 
 public:
 	CParticle(void);
 	~CParticle(void);
 
-	bool Init(int nNumOfParticle, IDirect3DTexture9* pParticleTexture);
+	int  Init(int nNumOfParticle, int nTextureID);
+	void UnInit(void);
+
 	void CreateParticle(float fVx, float fVy, float fVz);
 	void UpdataParticle(void);
-	void Render(void);
+	int  Render(void);
 
 	static void SetParticleRS(void);
 	static void UnSetParticleRS(void);
@@ -58,16 +51,31 @@ public:
 	void Shoot(D3DXVECTOR3 vStart, D3DXVECTOR3 vDirection);
 	void Fire(D3DXVECTOR3 vStart, D3DXVECTOR3 vDirection);
 
-	void SetLife(float fLife){m_fLife = fLife;}
-	void SetMass(float fMass){m_fMass = fMass;}
-	void SetPosition(float fX, float fY, float fZ){m_vPosition = D3DXVECTOR3(fX, fY, fZ);}
-	void SetColor(int r, int g, int b){m_Color = D3DCOLOR_XRGB(r, g, b);}
-	void SetFriction(float fFrition){m_fFriction = fFrition;}
-	void SetGravity(float fX, float fY, float fZ){m_vGravity = D3DXVECTOR3(fX, fY, fZ);}
-	void SetRadius(float fRadius){m_fRadius = fRadius;}
+	void SetLife(float fLife);
+	void SetMass(float fMass);
+	void SetPosition(float fX, float fY, float fZ);
+	void SetColor(int r, int g, int b);
+	void SetFriction(float fFrition);
+	void SetGravity(float fX, float fY, float fZ);
+	void SetRadius(float fRadius);
 
-	bool IsDead(void){return m_bIsDead;}
+	bool IsDead(void);
 
 private:
-	void UnInit(void);
+	int		m_nTextureID;
+	int		m_nNumOfParticles;
+	long	m_lVertexBufOffset;
+	long	m_lBolckSize;
+	bool	m_bIsDead;
+	float	m_fLife;
+	float	m_fMass;
+	float	m_fFriction;
+	float	m_fRadius;
+
+	D3DCOLOR	m_Color;
+	D3DXVECTOR3 m_vGravity;
+	D3DXVECTOR3 m_vPosition;
+	PARTICLE*	m_pParticles;
+	
+	IDirect3DVertexBuffer9* m_pParticleVertexBuf;
 };

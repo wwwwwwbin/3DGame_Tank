@@ -4,9 +4,9 @@
 extern HWND g_hWnd;
 
 CGameApp::CGameApp(void)
+: m_pEngine(NULL)
+, m_pGameStateManager(NULL)
 {
-	m_pEngine = NULL;
-	m_pGameStateManager = NULL;
 }
 
 
@@ -14,19 +14,35 @@ CGameApp::~CGameApp(void)
 {
 }
 
-bool CGameApp::Initialize( void )
+int CGameApp::Initialize( void )
 {
+	int nResult  = false;
+	int nRetCode = false;
+
+	nRetCode = CLogSystem::Init();
+	LOG_FAILD_JUMP(nRetCode);
+
 	m_pEngine = CGraphicsEngine::GetInstance();
+	LOG_FAILD_JUMP(m_pEngine);
+	
 	m_pGameStateManager = new CGameStateManager();
-	if(m_pEngine->Initialize() == false){
-		MessageBox(NULL,_T("初始化失败"),NULL,NULL);
-		return false;
-	}
+	LOG_FAILD_JUMP(m_pGameStateManager);
+
+	nRetCode = m_pEngine->Initialize();
+	LOG_FAILD_JUMP(nRetCode);
+
 	m_pEngine->m_pCamera->Pitch(0.1f);
 
 	m_fGameTime = m_pEngine->m_pTimer->GetGamePlayTime();
 
-	return true;
+
+	nResult = true;
+Exit0:
+	if (!nResult)
+	{
+		MessageBox(NULL, _T("初始化失败"), NULL, NULL);
+	}
+	return nResult;
 }
 
 void CGameApp::Run( void )
@@ -39,4 +55,10 @@ void CGameApp::Run( void )
 
 		m_pEngine->Render();
 	}
+}
+
+void CGameApp::Exit( void )
+{
+	CLogSystem::LogPrint(LOG_TYPE_LOG, "Game Exit!");
+	CLogSystem::UnInit();
 }

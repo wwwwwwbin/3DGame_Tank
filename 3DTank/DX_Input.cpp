@@ -23,13 +23,13 @@ int DX_Input::CreateInput( HINSTANCE hInst, HWND hWnd )
 
 	// int iMin=-100,int iMax=100,int iDeadZone=20,bool bUseJoystick=false
 	nRetCode = CreateDirectInput(hInst);
-	CHECK_FAILD_JUMP(nRetCode);
+	LOG_FAILD_JUMP(nRetCode);
 
 	nRetCode = CreateKeyboard(hWnd);
-	CHECK_FAILD_JUMP(nRetCode);
+	LOG_FAILD_JUMP(nRetCode);
 
 	nRetCode = CreateMouse(hWnd);
-	CHECK_FAILD_JUMP(nRetCode);
+	LOG_FAILD_JUMP(nRetCode);
 	
 	nResult = TRUE;
 Exit0:
@@ -265,7 +265,7 @@ int DX_Input::ReadKeyboard()
 	}
 
 	hRetCode = m_pKeyboardDevice->GetDeviceState(sizeof(m_vKeyBuffer),(LPVOID)m_vKeyBuffer);
-	CHECK_FAILD_JUMP(!FAILED(hRetCode));
+	LOG_HRESULT_FAILD_JUMP(hRetCode);
 
 	nResult = TRUE;
 Exit0:

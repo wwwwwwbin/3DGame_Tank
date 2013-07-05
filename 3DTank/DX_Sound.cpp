@@ -10,7 +10,7 @@ DX_SoundManager::DX_SoundManager()
 
 DX_SoundManager::~DX_SoundManager()
 {
-	SafeRelease(m_pDirectSound);
+	Release();
 }
 
 int DX_SoundManager::Init(HWND hWnd, DWORD dwCoopLevel)
@@ -19,17 +19,26 @@ int DX_SoundManager::Init(HWND hWnd, DWORD dwCoopLevel)
 	HRESULT hRetCode = E_FAIL;
 
 	hRetCode = DirectSoundCreate8(NULL, &m_pDirectSound, NULL);
-	CHECK_FAILD_JUMP(!FAILED(hRetCode));
+	LOG_HRESULT_FAILD_JUMP(hRetCode);
 
 	hRetCode = m_pDirectSound->SetCooperativeLevel(hWnd, dwCoopLevel); 
-	CHECK_FAILD_JUMP(!FAILED(hRetCode));
+	LOG_HRESULT_FAILD_JUMP(hRetCode);
 
 	nResult = TRUE;
 Exit0:
+	if (!nResult)
+	{
+		Release();
+	}
 	return nResult;
 }
 
-int DX_SoundManager::SetPrimaryBufferFormat(WORD wChannels,DWORD dwSamplesPerSec,WORD wBitsPerSample)
+void DX_SoundManager::Release( void )
+{
+	SafeRelease(m_pDirectSound);
+}
+
+int DX_SoundManager::SetPrimaryBufferFormat(WORD wChannels, DWORD dwSamplesPerSec, WORD wBitsPerSample)
 {
 	int		nResult  = FALSE;
 	HRESULT hRetCode = FALSE;
@@ -39,7 +48,7 @@ int DX_SoundManager::SetPrimaryBufferFormat(WORD wChannels,DWORD dwSamplesPerSec
 	DSBUFFERDESC bufferDesc;
 	WAVEFORMATEX waveFormat;
 
-    CHECK_FAILD_JUMP(m_pDirectSound);
+    LOG_FAILD_JUMP(m_pDirectSound);
 
 	ZeroMemory(&bufferDesc, sizeof(DSBUFFERDESC));
 	bufferDesc.dwSize		 = sizeof(DSBUFFERDESC);
@@ -48,7 +57,7 @@ int DX_SoundManager::SetPrimaryBufferFormat(WORD wChannels,DWORD dwSamplesPerSec
 	bufferDesc.lpwfxFormat	 = NULL;
 
 	hRetCode = m_pDirectSound->CreateSoundBuffer(&bufferDesc, &pDirectSoundBuf, NULL);
-    CHECK_FAILD_JUMP(!FAILED(hRetCode));
+    LOG_HRESULT_FAILD_JUMP(hRetCode);
 
     ZeroMemory(&waveFormat, sizeof(WAVEFORMATEX)); 
     waveFormat.wFormatTag		= WAVE_FORMAT_PCM; 
@@ -59,7 +68,34 @@ int DX_SoundManager::SetPrimaryBufferFormat(WORD wChannels,DWORD dwSamplesPerSec
     waveFormat.nAvgBytesPerSec	= waveFormat.nSamplesPerSec * waveFormat.nBlockAlign;
 
 	hRetCode = pDirectSoundBuf->SetFormat(&waveFormat);
-	CHECK_FAILD_JUMP(!FAILED(hRetCode));
+	if (hRetCode != DS_OK)
+	{
+		switch(hRetCode)
+		{
+		case DSERR_BADFORMAT:
+			CLogSystem::LogPrint(LOG_TYPE_DEBUG, "DSERR_BADFORMAT");
+			break;
+		case DSERR_INVALIDCALL:
+			CLogSystem::LogPrint(LOG_TYPE_DEBUG, "DSERR_INVALIDCALL");
+			break;
+		case DSERR_INVALIDPARAM:
+			CLogSystem::LogPrint(LOG_TYPE_DEBUG, "DSERR_INVALIDPARAM");
+			break;
+		case DSERR_OUTOFMEMORY:
+			CLogSystem::LogPrint(LOG_TYPE_DEBUG, "DSERR_OUTOFMEMORY");
+			break;
+		case DSERR_PRIOLEVELNEEDED:
+			CLogSystem::LogPrint(LOG_TYPE_DEBUG, "DSERR_PRIOLEVELNEEDED");
+			break;
+		case DSERR_UNSUPPORTED:
+			CLogSystem::LogPrint(LOG_TYPE_DEBUG, "DSERR_UNSUPPORTED");
+			break;
+		default:
+			CLogSystem::LogPrint(LOG_TYPE_DEBUG, "hRetCode not match");
+		}
+	}
+	CLogSystem::LogPrint(LOG_TYPE_DEBUG, "%d, %d", hRetCode, DS_OK);
+	LOG_HRESULT_FAILD_JUMP(hRetCode);
 
 	nResult = TRUE;
 Exit0:
@@ -82,6 +118,7 @@ IDirectSound8* DX_SoundManager::GetDirectSound()
 	return m_pDirectSound;
 }
 
+
 DX_Sound::DX_Sound()
 : m_pDirectSoundBuf8(NULL)
 {
@@ -99,17 +136,17 @@ int DX_Sound::LoadWaveFile(const char* cpszWaveFile)
 	int		nRetCode = FALSE;
 	FILE*	pFile	 = NULL;
 
-	CHECK_FAILD_JUMP(cpszWaveFile);
+	LOG_FAILD_JUMP(cpszWaveFile);
 
 	nRetCode = fopen_s(&pFile, cpszWaveFile, "rb");
-	CHECK_FAILD_JUMP(!nRetCode);
-	CHECK_FAILD_JUMP(pFile);
+	LOG_FAILD_JUMP(!nRetCode);
+	LOG_FAILD_JUMP(pFile);
 	
 	nRetCode = GetSecondaryBuffer(pFile);
-	CHECK_FAILD_JUMP(nRetCode);
+	LOG_FAILD_JUMP(nRetCode);
 
 	nRetCode = LoadDataInBuffer(pFile);
-	CHECK_FAILD_JUMP(pFile);
+	LOG_FAILD_JUMP(pFile);
 	
 	nResult = TRUE;
 Exit0:
@@ -130,18 +167,18 @@ int DX_Sound::GetSecondaryBuffer(FILE* pFile)
 	WAVEFORMATEX waveFormat;
 	DSBUFFERDESC bufferDesc;
 
-	CHECK_FAILD_JUMP(pFile);
+	LOG_FAILD_JUMP(pFile);
 
 	pWaveHeader = new sWaveHeader();
-	CHECK_FAILD_JUMP(pWaveHeader);
+	LOG_FAILD_JUMP(pWaveHeader);
 
 	fseek(pFile, 0, SEEK_SET);
 	fread(pWaveHeader, 1, sizeof(sWaveHeader), pFile);
 
-	CHECK_FAILD_JUMP(!memcmp(pWaveHeader->RiffID,   "RIFF", 4));
-	CHECK_FAILD_JUMP(!memcmp(pWaveHeader->WaveID,   "WAVE", 4));
-	CHECK_FAILD_JUMP(!memcmp(pWaveHeader->FormatID, "fmt ", 4));
-	CHECK_FAILD_JUMP(!memcmp(pWaveHeader->DataID,   "data", 4));
+	LOG_FAILD_JUMP(!memcmp(pWaveHeader->RiffID,   "RIFF", 4));
+	LOG_FAILD_JUMP(!memcmp(pWaveHeader->WaveID,   "WAVE", 4));
+	LOG_FAILD_JUMP(!memcmp(pWaveHeader->FormatID, "fmt ", 4));
+	LOG_FAILD_JUMP(!memcmp(pWaveHeader->DataID,   "data", 4));
 	
 	
 	ZeroMemory(&waveFormat, sizeof(WAVEFORMATEX));
@@ -159,10 +196,10 @@ int DX_Sound::GetSecondaryBuffer(FILE* pFile)
 	bufferDesc.lpwfxFormat	 = &waveFormat;
 
 	hRetCode = DX_SoundManager::GetSoundManager()->GetDirectSound()->CreateSoundBuffer(&bufferDesc, &pDirectSoundBuf, NULL);
-	CHECK_FAILD_JUMP(!FAILED(hRetCode));
+	LOG_HRESULT_FAILD_JUMP(hRetCode);
 
 	hRetCode = pDirectSoundBuf->QueryInterface(IID_IDirectSoundBuffer8, (void**)&m_pDirectSoundBuf8);
-	CHECK_FAILD_JUMP(!FAILED(hRetCode));
+	LOG_HRESULT_FAILD_JUMP(hRetCode);
 
 	nResult = TRUE;
 Exit0:
@@ -183,10 +220,10 @@ int DX_Sound::LoadDataInBuffer(FILE* pFile)
 	BYTE*			pSoundPtr2	= NULL;
 	sWaveHeader*	pWaveHeader = NULL;
 	
-	CHECK_FAILD_JUMP(pFile);
+	LOG_FAILD_JUMP(pFile);
 	
 	pWaveHeader = new sWaveHeader();
-	CHECK_FAILD_JUMP(pWaveHeader);
+	LOG_FAILD_JUMP(pWaveHeader);
 
 	fseek(pFile, 0, SEEK_SET);
 	fread(pWaveHeader, 1, sizeof(sWaveHeader),pFile);
@@ -200,7 +237,7 @@ int DX_Sound::LoadDataInBuffer(FILE* pFile)
 			&dwSoundSize2,
 			0
 	);
-	CHECK_FAILD_JUMP(!FAILED(hRetCode));
+	LOG_HRESULT_FAILD_JUMP(hRetCode);
 	
 	fread(pSoundPtr1, 1, dwSoundSize1, pFile);
 	if (pSoundPtr2 != NULL)
@@ -223,13 +260,13 @@ int DX_Sound::Play(bool bLoop)
 	int		nResult  = FALSE;
 	HRESULT hRetCode = E_FAIL;
 
-	CHECK_FAILD_JUMP(m_pDirectSoundBuf8);
+	LOG_FAILD_JUMP(m_pDirectSoundBuf8);
 
 	hRetCode = m_pDirectSoundBuf8->SetCurrentPosition(0);
-	CHECK_FAILD_JUMP(!FAILED(hRetCode));
+	LOG_HRESULT_FAILD_JUMP(hRetCode);
 	
 	hRetCode = m_pDirectSoundBuf8->Play(0, 0, bLoop);
-	CHECK_FAILD_JUMP(!FAILED(hRetCode));
+	LOG_HRESULT_FAILD_JUMP(hRetCode);
 
 	nResult = TRUE;
 Exit0:
@@ -241,10 +278,10 @@ int DX_Sound::SetVolume(long lVolume)
 	int		nResult  = FALSE;
 	HRESULT hRetCode = E_FAIL;
 
-	CHECK_FAILD_JUMP(m_pDirectSoundBuf8);
+	LOG_FAILD_JUMP(m_pDirectSoundBuf8);
 
 	hRetCode = m_pDirectSoundBuf8->SetVolume(lVolume);
-	CHECK_FAILD_JUMP(!FAILED(hRetCode));
+	LOG_HRESULT_FAILD_JUMP(hRetCode);
 
 	nResult = TRUE;
 Exit0:
@@ -256,10 +293,10 @@ int DX_Sound::Stop()
 	int		nResult  = FALSE;
 	HRESULT hRetCode = E_FAIL;
 
-	CHECK_FAILD_JUMP(m_pDirectSoundBuf8);
+	LOG_FAILD_JUMP(m_pDirectSoundBuf8);
 
 	hRetCode = m_pDirectSoundBuf8->Stop();
-	CHECK_FAILD_JUMP(!FAILED(hRetCode));
+	LOG_HRESULT_FAILD_JUMP(hRetCode);
 
 	nResult = TRUE;
 Exit0:
