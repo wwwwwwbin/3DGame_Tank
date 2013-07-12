@@ -2,7 +2,7 @@
 //
 //  FileName    :   TextureMgr.h
 //  Version     :   1.0
-//  Creater     :   weibin Huang
+//  Creator     :   weibin Huang
 //  Date        :   2013-07-04 20:13
 //  Comment     :   Container of Texture
 //
@@ -10,6 +10,8 @@
 
 #pragma once
 
+#include <list>
+#include <vector>
 #include <map>
 #include <string>
 
@@ -17,15 +19,24 @@ class TextureMgr
 {
 public:
 
-	TextureMgr(void);
-	~TextureMgr(void);
+	static TextureMgr* GetInstance(void);
 
-	int LoadTexture(IDirect3DDevice9* pDevice, const LPCSTR cpFilePath, int& nReference);
+	int  Init(IDirect3DDevice9* pDevice);
+	void UnInit(void);
+
+	int LoadTexture(const LPCSTR cpFilePath, int& nReference);
 	int UnLoadTexture(const LPCSTR cpFilePath);
 
+	int GetTexture(int nID, IDirect3DTexture9** ppOutput);
+
+	/*
 	int GetTexture(const LPCSTR cpFilePath, IDirect3DTexture9** ppOutput);
+	int GetTexture(const LPCSTR cpFilePath, int& nOutput);
+	*/
 
 private:
+	TextureMgr(void);
+	~TextureMgr(void);
 
 	struct TextureRef
 	{
@@ -33,7 +44,12 @@ private:
 		int nCount;
 	};
 
-	typedef std::map<std::string, TextureRef>	TextureRefMap;
+	typedef std::vector<TextureRef>		TextureRefVector;
+	typedef std::map<std::string, int>	TextureIDMap;
+	typedef std::list<int>				FreeIDList;
 
-	TextureRefMap	m_FilePathMap;
+	TextureIDMap		m_FilePathMap;
+	TextureRefVector	m_vTextureRef;
+	FreeIDList			m_FreeIDList;
+	IDirect3DDevice9*	m_pIDirect3DDevice;
 };

@@ -14,15 +14,19 @@ CTree::~CTree(void)
 
 int CTree::Init( void )
 {
-	int nRetCode = FALSE;
-	int nResult  = FALSE;
+	int nRetCode	= FALSE;
+	int nResult		= FALSE;
+	int nTextureID	= 0;
 
 	D3DXVECTOR3 treeDefalut(50, 50, 0);
 
 	m_pBillboard = new CBillboard();
 	LOG_FAILD_JUMP(m_pBillboard);
 
-	nRetCode = m_pBillboard->Init(TEXTURE_INDEX_TREE, treeDefalut);
+	nRetCode = TextureMgr::GetInstance()->LoadTexture("tree.png", nTextureID);
+	LOG_FAILD_JUMP(nRetCode);
+
+	nRetCode = m_pBillboard->Init(nTextureID, treeDefalut);
 	LOG_FAILD_JUMP(nRetCode);
 
 	nResult = TRUE;

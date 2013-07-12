@@ -1,5 +1,16 @@
+//////////////////////////////////////////////////////////////////////////////////////
+//
+//  FileName    :   LogSystem.cpp
+//  Version     :   1.0
+//  Creator     :   weibin Huang
+//  Date        :   2013-07-04 19:31
+//  Comment     :   
+//
+//////////////////////////////////////////////////////////////////////////////////////
+
 #include "stdafx.h"
 #include "LogSystem.h"
+#include <share.h>
 #include <time.h>
 
 FILE* CLogSystem::m_pLogFile = NULL;
@@ -25,8 +36,8 @@ int CLogSystem::Init( void )
 
 	CHECK_SUCCEED_JUMP(m_pLogFile);
 
-	nRetCode = fopen_s(&m_pLogFile, "Log.txt", "w+");
-	CHECK_FAILD_JUMP(!nRetCode);
+	m_pLogFile = _fsopen("Log.txt", "w+", _SH_DENYNO);
+	CHECK_FAILD_JUMP(m_pLogFile);
 
 	_time64(&llTime);
 

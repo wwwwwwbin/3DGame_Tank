@@ -1,9 +1,18 @@
+//////////////////////////////////////////////////////////////////////////////////////
+//
+//  FileName    :   Camera.h
+//  Version     :   1.0
+//  Creator     :   weibin Huang
+//  Date        :   2013-06-29 11:13
+//  Comment     :   
+//
+//////////////////////////////////////////////////////////////////////////////////////
+
 #pragma once
 #include "EngineDefine.h"
 
 class CCamera
 {
-
 public:
 	static CCamera* GetInstance(CameraType eCameraType);
 

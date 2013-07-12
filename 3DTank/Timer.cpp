@@ -2,7 +2,7 @@
 //
 //  FileName    :   Timer.cpp
 //  Version     :   1.0
-//  Creater     :   weibin Huang
+//  Creator     :   weibin Huang
 //  Date        :   2013-07-04 21:06
 //  Comment     :   Container of Texture
 //
@@ -31,7 +31,6 @@ CTimer::~CTimer(void)
 
 int CTimer::InitTime()
 {
-	int nResult  = FALSE;
 	int nRetCode = FALSE;
 	
 	m_fFPS			= 0;
@@ -53,9 +52,7 @@ int CTimer::InitTime()
 		m_ulTimeStart = timeGetTime();
 	}
 
-	nResult = TRUE;
-Exit0:
-	return nResult;
+	return TRUE;
 }
 
 float CTimer::GetGamePlayTime()

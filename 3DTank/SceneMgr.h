@@ -29,7 +29,7 @@ private:
 	BulletList m_BulletList;
 
 private:
-	void SetSkyBox(void);
+	int SetSkyBox(void);
 public:
 	CSceneMgr(void);
 	~CSceneMgr(void);

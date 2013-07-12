@@ -2,7 +2,7 @@
 //
 //  FileName    :   Timer.h
 //  Version     :   1.0
-//  Creater     :   weibin Huang
+//  Creator     :   weibin Huang
 //  Date        :   2013-07-04 21:06
 //  Comment     :   Container of Texture
 //
@@ -14,7 +14,6 @@
 class CTimer
 {
 public:
-
 	static CTimer* GetInstance(void);
 
 	int  InitTime();

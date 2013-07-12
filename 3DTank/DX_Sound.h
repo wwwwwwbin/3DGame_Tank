@@ -1,3 +1,13 @@
+//////////////////////////////////////////////////////////////////////////////////////
+//
+//  FileName    :   DX_Sound.h
+//  Version     :   1.0
+//  Creator     :   weibin Huang
+//  Date        :   2013-06-29 11:13
+//  Comment     :   
+//
+//////////////////////////////////////////////////////////////////////////////////////
+
 #pragma once
 
 #include "dsound.h"
@@ -26,7 +36,7 @@ public:
 
 	int  Init(HWND hWnd, DWORD dwCoopLevel = DSSCL_NORMAL);
 	void Release(void);
-	int  SetPrimaryBufferFormat(WORD wChannels=1, DWORD dwSamplesPerSec = 22050, WORD wBitsPerSample = 16);
+	int  SetPrimaryBufferFormat(WORD wChannels = 1, DWORD dwSamplesPerSec = 22050, WORD wBitsPerSample = 16);
 
 	IDirectSound8* GetDirectSound();
 

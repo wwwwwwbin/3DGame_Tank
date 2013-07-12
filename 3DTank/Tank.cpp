@@ -86,9 +86,13 @@ int CTank::Updata( void )
 				vFirePosition = m_vPosition + (m_vDirectionLook * 20);
 				vFirePosition.y += 8;
 
-				CParticle*	pParticle = NULL;
+				CParticle*	pParticle	= NULL;
+				int			nTextureID	= 0;
 
-				pParticle = pEngine->m_pParticleMgr->CreateParticle(500, TEXTURE_INDEX_PARTICLE);
+				nRetCode = TextureMgr::GetInstance()->LoadTexture("cricle.png", nTextureID);
+				LOG_FAILD_JUMP(nRetCode);
+
+				pParticle = pEngine->m_pParticleMgr->CreateParticle(500, nTextureID);
 				if (pParticle)
 				{
 					//pParticle->Explode(vFirePosition);

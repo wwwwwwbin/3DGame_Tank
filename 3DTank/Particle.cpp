@@ -1,6 +1,17 @@
+//////////////////////////////////////////////////////////////////////////////////////
+//
+//  FileName    :   Particle.cpp
+//  Version     :   1.0
+//  Creator     :   weibin Huang
+//  Date        :   2013-06-29 11:13
+//  Comment     :   
+//
+//////////////////////////////////////////////////////////////////////////////////////
+
 #include "StdAfx.h"
 #include "Particle.h"
 #include "GraphicsEngine.h"
+#include "TextureMgr.h"
 
 inline DWORD FToW(float f){return *((DWORD*)&f);}
 
@@ -21,9 +32,6 @@ int CParticle::Init( int nNumOfParticle, int nTextureID )
 	HRESULT hRetCode = E_FAIL;
 
 	CGraphicsEngine* pEngine = NULL;
-
-	LOG_FAILD_JUMP(nTextureID >= TEXTURE_INDEX_BEGIN);
-	LOG_FAILD_JUMP(nTextureID <  TEXTURE_INDEX_END);
 
 	pEngine = CGraphicsEngine::GetInstance();
 	LOG_FAILD_JUMP(pEngine);
@@ -158,21 +166,20 @@ void CParticle::UnSetParticleRS( void )
 int CParticle::Render( void )
 {
 	int		nResult  = FALSE;
+	int		nRetCode = FALSE;
 	HRESULT hRetCode = E_FAIL;
 	
 	IDirect3DDevice9*		pDevice		= NULL;
 	IDirect3DTexture9*		pTexture	= NULL;
 	PARTICLE_RENDERSTRUCT*	pVertexBuf	= NULL;
 
-	LOG_FAILD_JUMP(m_nTextureID >= TEXTURE_INDEX_BEGIN);
-	LOG_FAILD_JUMP(m_nTextureID <  TEXTURE_INDEX_END);
-
 	pDevice = CGraphicsEngine::GetInstance()->GetD3DDevice();
 	LOG_FAILD_JUMP(pDevice);
 
 	pDevice->SetFVF(PARTICLE_FVF);
 
-	pTexture = CGraphicsEngine::GetInstance()->GetTexture(m_nTextureID);
+	nRetCode = TextureMgr::GetInstance()->GetTexture(m_nTextureID, &pTexture);
+	LOG_FAILD_JUMP(nRetCode);
 	LOG_FAILD_JUMP(pTexture);
 
 	hRetCode = pDevice->SetTexture(0, pTexture);

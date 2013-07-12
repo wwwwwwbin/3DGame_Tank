@@ -1,3 +1,13 @@
+//////////////////////////////////////////////////////////////////////////////////////
+//
+//  FileName    :   Billboard.h
+//  Version     :   1.0
+//  Creator     :   weibin Huang
+//  Date        :   2013-06-29 11:13
+//  Comment     :   
+//
+//////////////////////////////////////////////////////////////////////////////////////
+
 #pragma once
 
 class CBillboard
@@ -11,6 +21,6 @@ public:
 	void SetPosition(float fX, float fY, float fZ);
 
 private:
-	D3DXMATRIX m_matWorld;
-	int m_nTextureID;
+	int			m_nTextureID;
+	D3DXMATRIX	m_matWorld;
 };

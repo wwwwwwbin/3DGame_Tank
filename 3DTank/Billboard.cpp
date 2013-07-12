@@ -1,10 +1,20 @@
+//////////////////////////////////////////////////////////////////////////////////////
+//
+//  FileName    :   Billboard.cpp
+//  Version     :   1.0
+//  Creator     :   weibin Huang
+//  Date        :   2013-06-29 11:13
+//  Comment     :   
+//
+//////////////////////////////////////////////////////////////////////////////////////
+
 #include "StdAfx.h"
 #include "Billboard.h"
 #include "EngineDefine.h"
 #include "GraphicsEngine.h"
 
 CBillboard::CBillboard(void)
-: m_nTextureID(TEXTURE_INDEX_INVALD)
+: m_nTextureID(0)
 {
 }
 
@@ -15,9 +25,6 @@ CBillboard::~CBillboard(void)
 int CBillboard::Init( int nTextureID, D3DXVECTOR3& pos )
 {
 	int nResult = FALSE;
-
-	LOG_FAILD_JUMP(nTextureID >= TEXTURE_INDEX_BEGIN);
-	LOG_FAILD_JUMP(nTextureID < TEXTURE_INDEX_END);
 
 	m_nTextureID = nTextureID;
 	SetPosition(pos.x, pos.y, pos.z);

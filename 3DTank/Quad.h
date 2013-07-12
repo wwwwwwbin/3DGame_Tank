@@ -1,3 +1,13 @@
+//////////////////////////////////////////////////////////////////////////////////////
+//
+//  FileName    :   Quad.h
+//  Version     :   1.0
+//  Creator     :   weibin Huang
+//  Date        :   2013-06-29 11:13
+//  Comment     :   
+//
+//////////////////////////////////////////////////////////////////////////////////////
+
 #pragma once
 class CQuad
 {
@@ -13,7 +23,7 @@ public:
 	~CQuad(void);
 
 	// 0-3 分别是左上，右上，右下，左下4点
-	QuadVertex m_vVertex[4];
 	int m_nTextureID;
+	QuadVertex m_vVertex[4];
 };
 
