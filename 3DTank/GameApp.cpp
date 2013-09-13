@@ -53,6 +53,7 @@ void CGameApp::Run( void )
 		m_pGameStateManager->Update();
 		m_pGameStateManager->Render();
 
+		m_pEngine->Update();
 		m_pEngine->Render();
 	}
 }

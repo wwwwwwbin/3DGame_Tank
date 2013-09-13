@@ -174,6 +174,7 @@ int CGraphicsEngine::Render( void )
 		m_pSprite->Draw(pTexture, NULL, &v3SpriteCenter, NULL, 0xffffffff);
 		m_pSprite->End();
 	}
+	m_nNumOfBillboard = 0;
 
 	// 绘制平面
 	// 因为Quad直接采用世界坐标且不会改变，要将变换矩阵设为单位矩阵
@@ -191,10 +192,6 @@ int CGraphicsEngine::Render( void )
 		m_pIDirect3DDevice->DrawPrimitive(D3DPT_TRIANGLELIST, i * 6, 2);
 	}
 
-	// 绘制粒子特效
-	m_pParticleMgr->Update();
-	m_pParticleMgr->Render();
-
 	// 绘制模型
 	for(int i = 0; i < m_nNumOfModel; ++i)
 	{
@@ -206,10 +203,13 @@ int CGraphicsEngine::Render( void )
 			m_vPoolOfModel[i]->m_pD3DXMesh->DrawSubset(j);
 		}
 	}
+	m_nNumOfModel = 0;
+
+	// 绘制粒子特效
+	m_pParticleMgr->Render();
+
 	m_pIDirect3DDevice->EndScene();
 	m_pIDirect3DDevice->Present(NULL, NULL, NULL, NULL);
-	m_nNumOfModel = 0;
-	m_nNumOfBillboard = 0;
 	
 	nResult = TRUE;
 Exit0:
@@ -361,12 +361,12 @@ void CGraphicsEngine::BuiltVertexBuffer( void )
 	m_pVertexBuffer->Lock(0, 0, (void**)&pVertexBuf, 0);
 	for (int i = 0; i < m_nNumOfQuad; ++i)
 	{
-		pVertexBuf[i*6 + 0] =  m_vQuads[i]->m_vVertex[0];
-		pVertexBuf[i*6 + 1] =  m_vQuads[i]->m_vVertex[1];
-		pVertexBuf[i*6 + 2] =  m_vQuads[i]->m_vVertex[3];
-		pVertexBuf[i*6 + 3] =  m_vQuads[i]->m_vVertex[3];
-		pVertexBuf[i*6 + 4] =  m_vQuads[i]->m_vVertex[1];
-		pVertexBuf[i*6 + 5] =  m_vQuads[i]->m_vVertex[2];
+		pVertexBuf[i*6 + 0] =  m_vQuads[i]->m_vVertex[POS2D_TOP_LEFT];
+		pVertexBuf[i*6 + 1] =  m_vQuads[i]->m_vVertex[POS2D_TOP_RIGHT];
+		pVertexBuf[i*6 + 2] =  m_vQuads[i]->m_vVertex[POS2D_BOTTOM_LEFT];
+		pVertexBuf[i*6 + 3] =  m_vQuads[i]->m_vVertex[POS2D_BOTTOM_LEFT];
+		pVertexBuf[i*6 + 4] =  m_vQuads[i]->m_vVertex[POS2D_TOP_RIGHT];
+		pVertexBuf[i*6 + 5] =  m_vQuads[i]->m_vVertex[POS2D_BOTTOM_RIGHT];
 	}
 	m_pVertexBuffer->Unlock();
 	m_bNeedBuiltVertexBuffer = false;
@@ -424,4 +424,16 @@ void CGraphicsEngine::AddBillboard( CBillboard* pBillboard )
 IDirect3DDevice9* CGraphicsEngine::GetD3DDevice( void )
 {
 	return m_pIDirect3DDevice;
+}
+
+int CGraphicsEngine::Update( void )
+{	
+	int nResult  = FALSE;
+	int nRetCode = FALSE;
+	
+	m_pParticleMgr->Update();
+
+	nResult = TRUE;
+Exit0:
+	return nResult;
 }

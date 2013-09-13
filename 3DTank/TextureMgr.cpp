@@ -14,7 +14,6 @@
 TextureMgr::TextureMgr(void)
 : m_pIDirect3DDevice(NULL)
 {
-	
 }
 
 TextureMgr::~TextureMgr(void)
@@ -130,7 +129,7 @@ int TextureMgr::GetTexture( int nID, IDirect3DTexture9** ppOutput )
 	int 				nRetCode = FALSE;
 	IDirect3DTexture9*	pTexture = NULL;
 
-	LOG_FAILD_JUMP(nID >= 0);
+	LOG_FAILD_JUMP(nID > 0);
 	LOG_FAILD_JUMP(ppOutput);
 	
 	if (nID < m_vTextureRef.size())
@@ -141,7 +140,6 @@ int TextureMgr::GetTexture( int nID, IDirect3DTexture9** ppOutput )
 			pTexture = texRef.pTexture;
 		}
 	}
-
 
 	nResult = TRUE;
 	*ppOutput = pTexture;
@@ -180,6 +178,28 @@ Exit0:
 	return nResult;
 }
 
+int TextureMgr::UnLoadTexture( int nID )
+{
+	int nResult  = FALSE;
+
+	if (nID > 0 && nID < m_vTextureRef.size())
+	{
+		TextureRef& texRef = m_vTextureRef[nID];
+
+		--texRef.nCount;
+
+		if (texRef.nCount <= 0)
+		{
+			SafeRelease(texRef.pTexture);
+			m_FreeIDList.push_back(nID);
+		}
+	}
+
+	nResult = TRUE;
+Exit0:
+	return nResult;
+}
+
 TextureMgr* TextureMgr::GetInstance( void )
 {
 	static TextureMgr* pInstance = NULL;
@@ -205,10 +225,17 @@ int TextureMgr::Init( IDirect3DDevice9* pDevice )
 	m_FreeIDList.clear();
 
 	m_vTextureRef.resize(8);
-	for (int i = 0; i < 8; ++i)
+	
+	TextureRef TexRef;
+	TexRef.pTexture = NULL;
+	TexRef.nCount = 1;
+	// make index 0 has value
+	m_vTextureRef.push_back(TexRef);
+
+	for (int i = 1; i < 8; ++i)
 	{
 		m_FreeIDList.push_back(i);
-	}	
+	}
 
 	nResult = TRUE;
 Exit0:

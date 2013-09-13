@@ -9,6 +9,9 @@
 //////////////////////////////////////////////////////////////////////////////////////
 
 #pragma once
+
+#include "GraphicsEngineDef.h"
+
 class CQuad
 {
 public:
@@ -22,8 +25,15 @@ public:
 	CQuad(void);
 	~CQuad(void);
 
-	// 0-3 分别是左上，右上，右下，左下4点
 	int m_nTextureID;
-	QuadVertex m_vVertex[4];
+	QuadVertex m_vVertex[POS2D_COUNT];
+
+	int Init(
+		const char* cpszTexPath, 
+		D3DXVECTOR3 vTopLeft, 
+		D3DXVECTOR3 vTopRight, 
+		D3DXVECTOR3 vBottomRight,
+		D3DXVECTOR3 vBottomLeft
+	);
 };
 

@@ -59,6 +59,7 @@ public:
 	void CameraPointRotate(D3DXVECTOR3 pos, float fAngle);
 	void CameraPointRotate(float nPosX, float nPosY, float nPosZ, float fAngle);
 
+	int Update(void);
 	int Render(void);
 
 private:

@@ -339,6 +339,10 @@
 					>
 				</File>
 				<File
+					RelativePath=".\GraphicsEngineDef.h"
+					>
+				</File>
+				<File
 					RelativePath=".\Particle.cpp"
 					>
 				</File>

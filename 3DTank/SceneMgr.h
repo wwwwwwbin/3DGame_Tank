@@ -29,10 +29,12 @@ private:
 	BulletList m_BulletList;
 
 private:
-	int SetSkyBox(void);
+	int InitSkyBox();
 public:
 	CSceneMgr(void);
 	~CSceneMgr(void);
+
+	int Init();
 
 	void Update(void);
 	void Render(void);

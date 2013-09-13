@@ -26,6 +26,7 @@ public:
 
 	int LoadTexture(const LPCSTR cpFilePath, int& nReference);
 	int UnLoadTexture(const LPCSTR cpFilePath);
+	int UnLoadTexture(int nID);
 
 	int GetTexture(int nID, IDirect3DTexture9** ppOutput);
 

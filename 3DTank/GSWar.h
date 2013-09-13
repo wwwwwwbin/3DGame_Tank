@@ -10,7 +10,7 @@ private:
 public:
 	CGSWar(void);
 	~CGSWar(void);
-	virtual void Initialize(void);
+	virtual int Initialize(void);
 	virtual void Update(void);
 	virtual void Render(void);
 	virtual void Enter(void);

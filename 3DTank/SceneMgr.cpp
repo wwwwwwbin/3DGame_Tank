@@ -5,37 +5,11 @@
 #include "GraphicsEngine.h"
 
 CSceneMgr::CSceneMgr(void)
+: m_pTank(NULL)
 {
-	m_pTank = new CTank(0.f,0.f,0.f);
-	CGraphicsEngine::GetInstance()->SetCameraPosition(
-		m_pTank->GetPosition().x + 50,
-		m_pTank->GetPosition().y + 30,
-		m_pTank->GetPosition().z
-	);
-	for(int i = 0 ; i < 40 ; ++i){
-		m_vWalls[i] = new CWall(-395.f,0,-395.f+i*20.f);
-		m_vWalls[40 + i] = new CWall(395.f,0,-395.f+i*20.f);
-	}
-	for(int i = 0 ; i < 40 ; ++i){
-		m_vWalls[80 + i] = new CWall(-395.f + i*20.f,0,-395.f);
-		m_vWalls[120 + i] = new CWall(-395.f + i*20.f,0,395.f);
-	}
-
-	m_pTree[0] = new CTree();
-	m_pTree[0]->SetPosition(-350.f, 55.f, -350.f);
-
-	m_pTree[1] = new CTree();
-	m_pTree[1]->SetPosition(-350.f, 55.f, 350.f);
-
-	m_pTree[2] = new CTree();
-	m_pTree[2]->SetPosition(350.f, 55.f, -350.f);
-
-	m_pTree[3] = new CTree();
-	m_pTree[3]->SetPosition(350.f, 55.f, 350.f);
-
-	m_BulletList.clear();
-
-	SetSkyBox();
+	memset(m_vWalls, 0, sizeof(m_vWalls));
+	memset(m_pQuad, 0, sizeof(m_pQuad));
+	memset(m_pTree, 0, sizeof(m_pTree));
 }
 
 
@@ -120,7 +94,7 @@ void CSceneMgr::Render( void )
 	}
 }
 
-int CSceneMgr::SetSkyBox( void )
+int CSceneMgr::InitSkyBox( void )
 {
 	int nResult  = FALSE;
 	int nRetCode = FALSE;
@@ -132,188 +106,153 @@ int CSceneMgr::SetSkyBox( void )
 	m_pQuad[0] = new CQuad();
 	LOG_FAILD_JUMP(m_pQuad[0]);
 
-	nRetCode = TextureMgr::GetInstance()->LoadTexture("Lawn.jpg", m_pQuad[0]->m_nTextureID);
+	nRetCode = m_pQuad[0]->Init(
+		"Lawn.jpg", 
+		D3DXVECTOR3(-fBoxPosition, 0.f, -fBoxPosition),
+		D3DXVECTOR3(-fBoxPosition, 0.f, fBoxPosition),
+		D3DXVECTOR3(fBoxPosition,  0.f, fBoxPosition),
+		D3DXVECTOR3(fBoxPosition,  0.f, -fBoxPosition)
+	);
 	LOG_FAILD_JUMP(nRetCode);
-
-	m_pQuad[0]->m_vVertex[0].fPosX = -fBoxPosition;
-	m_pQuad[0]->m_vVertex[0].fPosZ = -fBoxPosition;
-	m_pQuad[0]->m_vVertex[0].fPosY = 0.f;
-	m_pQuad[0]->m_vVertex[0].fTexX = 0.f;
-	m_pQuad[0]->m_vVertex[0].fTexY = 0.f;
-
-	m_pQuad[0]->m_vVertex[1].fPosX = -fBoxPosition;
-	m_pQuad[0]->m_vVertex[1].fPosZ = fBoxPosition;
-	m_pQuad[0]->m_vVertex[1].fPosY = 0.f;
-	m_pQuad[0]->m_vVertex[1].fTexX = 1.f;
-	m_pQuad[0]->m_vVertex[1].fTexY = 0.f;
-
-	m_pQuad[0]->m_vVertex[2].fPosX = fBoxPosition;
-	m_pQuad[0]->m_vVertex[2].fPosZ = fBoxPosition;
-	m_pQuad[0]->m_vVertex[2].fPosY = 0.f;
-	m_pQuad[0]->m_vVertex[2].fTexX = 1.f;
-	m_pQuad[0]->m_vVertex[2].fTexY = 1.f;
-
-	m_pQuad[0]->m_vVertex[3].fPosX = fBoxPosition;
-	m_pQuad[0]->m_vVertex[3].fPosZ = -fBoxPosition;
-	m_pQuad[0]->m_vVertex[3].fPosY = 0.f;
-	m_pQuad[0]->m_vVertex[3].fTexX = 0.f;
-	m_pQuad[0]->m_vVertex[3].fTexY = 1.f;
-	CGraphicsEngine::GetInstance()->AddQuad(m_pQuad[0]);
 
 	m_pQuad[1] = new CQuad();
 	LOG_FAILD_JUMP(m_pQuad[1]);
-	
-	nRetCode = TextureMgr::GetInstance()->LoadTexture("Front.jpg", m_pQuad[1]->m_nTextureID);
+
+	nRetCode = m_pQuad[1]->Init(
+		"Front.jpg", 
+		D3DXVECTOR3(-fBoxPosition, fBoxHeigh, -fBoxPosition - fDelta),
+		D3DXVECTOR3(-fBoxPosition, fBoxHeigh, fBoxPosition + fDelta),
+		D3DXVECTOR3(-fBoxPosition, 0.f,		  fBoxPosition + fDelta),
+		D3DXVECTOR3(-fBoxPosition, 0.f,		  -fBoxPosition - fDelta)
+	);
 	LOG_FAILD_JUMP(nRetCode);
-
-	m_pQuad[1]->m_vVertex[0].fPosX = -fBoxPosition;
-	m_pQuad[1]->m_vVertex[0].fPosZ = -fBoxPosition - fDelta;
-	m_pQuad[1]->m_vVertex[0].fPosY = fBoxHeigh;
-	m_pQuad[1]->m_vVertex[0].fTexX = 0.f;
-	m_pQuad[1]->m_vVertex[0].fTexY = 0.f;
-
-	m_pQuad[1]->m_vVertex[1].fPosX = -fBoxPosition;
-	m_pQuad[1]->m_vVertex[1].fPosZ = fBoxPosition + fDelta;
-	m_pQuad[1]->m_vVertex[1].fPosY = fBoxHeigh;
-	m_pQuad[1]->m_vVertex[1].fTexX = 1.f;
-	m_pQuad[1]->m_vVertex[1].fTexY = 0.f;
-
-	m_pQuad[1]->m_vVertex[2].fPosX = -fBoxPosition;
-	m_pQuad[1]->m_vVertex[2].fPosZ = fBoxPosition + fDelta;
-	m_pQuad[1]->m_vVertex[2].fPosY = 0.f;
-	m_pQuad[1]->m_vVertex[2].fTexX = 1.f;
-	m_pQuad[1]->m_vVertex[2].fTexY = 1.f;
-
-	m_pQuad[1]->m_vVertex[3].fPosX = -fBoxPosition;
-	m_pQuad[1]->m_vVertex[3].fPosZ = -fBoxPosition - fDelta;
-	m_pQuad[1]->m_vVertex[3].fPosY = 0.f;
-	m_pQuad[1]->m_vVertex[3].fTexX = 0.f;
-	m_pQuad[1]->m_vVertex[3].fTexY = 1.f;
-	CGraphicsEngine::GetInstance()->AddQuad(m_pQuad[1]);
 
 	m_pQuad[2] = new CQuad();
 	LOG_FAILD_JUMP(m_pQuad[2]);
 
-	nRetCode = TextureMgr::GetInstance()->LoadTexture("Left.jpg", m_pQuad[2]->m_nTextureID);
+	nRetCode = m_pQuad[2]->Init(
+		"Left.jpg", 
+		D3DXVECTOR3(fBoxPosition + fDelta,	fBoxHeigh, -fBoxPosition),
+		D3DXVECTOR3(-fBoxPosition - fDelta, fBoxHeigh, -fBoxPosition),
+		D3DXVECTOR3(-fBoxPosition - fDelta, 0.f,	   -fBoxPosition),
+		D3DXVECTOR3(fBoxPosition + fDelta,	0.f,	   -fBoxPosition)
+	);
 	LOG_FAILD_JUMP(nRetCode);
-
-	m_pQuad[2]->m_vVertex[0].fPosX = fBoxPosition + fDelta;
-	m_pQuad[2]->m_vVertex[0].fPosZ = -fBoxPosition;
-	m_pQuad[2]->m_vVertex[0].fPosY = fBoxHeigh;
-	m_pQuad[2]->m_vVertex[0].fTexX = 0.f;
-	m_pQuad[2]->m_vVertex[0].fTexY = 0.f;
-
-	m_pQuad[2]->m_vVertex[1].fPosX = -fBoxPosition - fDelta;
-	m_pQuad[2]->m_vVertex[1].fPosZ = -fBoxPosition;
-	m_pQuad[2]->m_vVertex[1].fPosY = fBoxHeigh;
-	m_pQuad[2]->m_vVertex[1].fTexX = 1.f;
-	m_pQuad[2]->m_vVertex[1].fTexY = 0.f;
-
-	m_pQuad[2]->m_vVertex[2].fPosX = -fBoxPosition - fDelta;
-	m_pQuad[2]->m_vVertex[2].fPosZ = -fBoxPosition;
-	m_pQuad[2]->m_vVertex[2].fPosY = 0.f;
-	m_pQuad[2]->m_vVertex[2].fTexX = 1.f;
-	m_pQuad[2]->m_vVertex[2].fTexY = 1.f;
-
-	m_pQuad[2]->m_vVertex[3].fPosX = fBoxPosition + fDelta;
-	m_pQuad[2]->m_vVertex[3].fPosZ = -fBoxPosition;
-	m_pQuad[2]->m_vVertex[3].fPosY = 0.f;
-	m_pQuad[2]->m_vVertex[3].fTexX = 0.f;
-	m_pQuad[2]->m_vVertex[3].fTexY = 1.f;
-	CGraphicsEngine::GetInstance()->AddQuad(m_pQuad[2]);
 
 	m_pQuad[3] = new CQuad();
 	LOG_FAILD_JUMP(m_pQuad[3]);
 
-	nRetCode = TextureMgr::GetInstance()->LoadTexture("Back.jpg", m_pQuad[3]->m_nTextureID);
+	nRetCode = m_pQuad[3]->Init(
+		"Back.jpg", 
+		D3DXVECTOR3(fBoxPosition, fBoxHeigh, fBoxPosition + fDelta),
+		D3DXVECTOR3(fBoxPosition, fBoxHeigh, -fBoxPosition - fDelta),
+		D3DXVECTOR3(fBoxPosition, 0.f,		 -fBoxPosition - fDelta),
+		D3DXVECTOR3(fBoxPosition, 0.f,		 fBoxPosition + fDelta)
+	);
 	LOG_FAILD_JUMP(nRetCode);
-
-	m_pQuad[3]->m_vVertex[0].fPosX = fBoxPosition;
-	m_pQuad[3]->m_vVertex[0].fPosZ = fBoxPosition + fDelta;
-	m_pQuad[3]->m_vVertex[0].fPosY = fBoxHeigh;
-	m_pQuad[3]->m_vVertex[0].fTexX = 0.f;
-	m_pQuad[3]->m_vVertex[0].fTexY = 0.f;
-
-	m_pQuad[3]->m_vVertex[1].fPosX = fBoxPosition;
-	m_pQuad[3]->m_vVertex[1].fPosZ = -fBoxPosition - fDelta;
-	m_pQuad[3]->m_vVertex[1].fPosY = fBoxHeigh;
-	m_pQuad[3]->m_vVertex[1].fTexX = 1.f;
-	m_pQuad[3]->m_vVertex[1].fTexY = 0.f;
-
-	m_pQuad[3]->m_vVertex[2].fPosX = fBoxPosition;
-	m_pQuad[3]->m_vVertex[2].fPosZ = -fBoxPosition - fDelta;
-	m_pQuad[3]->m_vVertex[2].fPosY = 0.f;
-	m_pQuad[3]->m_vVertex[2].fTexX = 1.f;
-	m_pQuad[3]->m_vVertex[2].fTexY = 1.f;
-
-	m_pQuad[3]->m_vVertex[3].fPosX = fBoxPosition;
-	m_pQuad[3]->m_vVertex[3].fPosZ = fBoxPosition + fDelta;
-	m_pQuad[3]->m_vVertex[3].fPosY = 0.f;
-	m_pQuad[3]->m_vVertex[3].fTexX = 0.f;
-	m_pQuad[3]->m_vVertex[3].fTexY = 1.f;
-	CGraphicsEngine::GetInstance()->AddQuad(m_pQuad[3]);
 
 	m_pQuad[4] = new CQuad();
 	LOG_FAILD_JUMP(m_pQuad[4]);
 
-	nRetCode = TextureMgr::GetInstance()->LoadTexture("Right.jpg", m_pQuad[4]->m_nTextureID);
+	nRetCode = m_pQuad[4]->Init(
+		"Right.jpg", 
+		D3DXVECTOR3(-fBoxPosition - fDelta, fBoxHeigh,	fBoxPosition),
+		D3DXVECTOR3(fBoxPosition + fDelta,	fBoxHeigh,	fBoxPosition),
+		D3DXVECTOR3(fBoxPosition + fDelta,	0.f,		fBoxPosition),
+		D3DXVECTOR3(-fBoxPosition - fDelta, 0.f,		fBoxPosition)
+	);
 	LOG_FAILD_JUMP(nRetCode);
-
-	m_pQuad[4]->m_vVertex[0].fPosX = -fBoxPosition - fDelta;
-	m_pQuad[4]->m_vVertex[0].fPosZ = fBoxPosition;
-	m_pQuad[4]->m_vVertex[0].fPosY = fBoxHeigh;
-	m_pQuad[4]->m_vVertex[0].fTexX = 0.f;
-	m_pQuad[4]->m_vVertex[0].fTexY = 0.f;
-
-	m_pQuad[4]->m_vVertex[1].fPosX = fBoxPosition + fDelta;
-	m_pQuad[4]->m_vVertex[1].fPosZ = fBoxPosition;
-	m_pQuad[4]->m_vVertex[1].fPosY = fBoxHeigh;
-	m_pQuad[4]->m_vVertex[1].fTexX = 1.f;
-	m_pQuad[4]->m_vVertex[1].fTexY = 0.f;
-
-	m_pQuad[4]->m_vVertex[2].fPosX = fBoxPosition + fDelta;
-	m_pQuad[4]->m_vVertex[2].fPosZ = fBoxPosition;
-	m_pQuad[4]->m_vVertex[2].fPosY = 0.f;
-	m_pQuad[4]->m_vVertex[2].fTexX = 1.f;
-	m_pQuad[4]->m_vVertex[2].fTexY = 1.f;
-
-	m_pQuad[4]->m_vVertex[3].fPosX = -fBoxPosition - fDelta;
-	m_pQuad[4]->m_vVertex[3].fPosZ = fBoxPosition;
-	m_pQuad[4]->m_vVertex[3].fPosY = 0.f;
-	m_pQuad[4]->m_vVertex[3].fTexX = 0.f;
-	m_pQuad[4]->m_vVertex[3].fTexY = 1.f;
-	CGraphicsEngine::GetInstance()->AddQuad(m_pQuad[4]);
 	
 	m_pQuad[5] = new CQuad();
 	LOG_FAILD_JUMP(m_pQuad[5]);
 
-	nRetCode = TextureMgr::GetInstance()->LoadTexture("Top.jpg", m_pQuad[5]->m_nTextureID);
+	nRetCode = m_pQuad[5]->Init(
+		"Top.jpg", 
+		D3DXVECTOR3(fBoxPosition,	fBoxHeigh,	-fBoxPosition),
+		D3DXVECTOR3(fBoxPosition,	fBoxHeigh,	fBoxPosition),
+		D3DXVECTOR3(-fBoxPosition,	fBoxHeigh,	fBoxPosition),
+		D3DXVECTOR3(-fBoxPosition,	fBoxHeigh,	-fBoxPosition)
+	);
 	LOG_FAILD_JUMP(nRetCode);
 
-	m_pQuad[5]->m_vVertex[0].fPosX = fBoxPosition;
-	m_pQuad[5]->m_vVertex[0].fPosZ = -fBoxPosition;
-	m_pQuad[5]->m_vVertex[0].fPosY = fBoxHeigh;
-	m_pQuad[5]->m_vVertex[0].fTexX = 0.f;
-	m_pQuad[5]->m_vVertex[0].fTexY = 0.f;
-
-	m_pQuad[5]->m_vVertex[1].fPosX = fBoxPosition;
-	m_pQuad[5]->m_vVertex[1].fPosZ = fBoxPosition;
-	m_pQuad[5]->m_vVertex[1].fPosY = fBoxHeigh;
-	m_pQuad[5]->m_vVertex[1].fTexX = 1.f;
-	m_pQuad[5]->m_vVertex[1].fTexY = 0.f;
-
-	m_pQuad[5]->m_vVertex[2].fPosX = -fBoxPosition;
-	m_pQuad[5]->m_vVertex[2].fPosZ = fBoxPosition;
-	m_pQuad[5]->m_vVertex[2].fPosY = fBoxHeigh;
-	m_pQuad[5]->m_vVertex[2].fTexX = 1.f;
-	m_pQuad[5]->m_vVertex[2].fTexY = 1.f;
-
-	m_pQuad[5]->m_vVertex[3].fPosX = -fBoxPosition;
-	m_pQuad[5]->m_vVertex[3].fPosZ = -fBoxPosition;
-	m_pQuad[5]->m_vVertex[3].fPosY = fBoxHeigh;
-	m_pQuad[5]->m_vVertex[3].fTexX = 0.f;
-	m_pQuad[5]->m_vVertex[3].fTexY = 1.f;
+	CGraphicsEngine::GetInstance()->AddQuad(m_pQuad[0]);
+	CGraphicsEngine::GetInstance()->AddQuad(m_pQuad[1]);
+	CGraphicsEngine::GetInstance()->AddQuad(m_pQuad[2]);
+	CGraphicsEngine::GetInstance()->AddQuad(m_pQuad[3]);
+	CGraphicsEngine::GetInstance()->AddQuad(m_pQuad[4]);
 	CGraphicsEngine::GetInstance()->AddQuad(m_pQuad[5]);
+
+	nResult = TRUE;
+Exit0:
+	if (!nResult)
+	{
+		for (int i = 0; i < 6; ++i)
+		{
+			if (m_pQuad[i])
+			{
+				delete m_pQuad[i];
+			}
+		}
+	}
+	return nResult;
+}
+
+int CSceneMgr::Init()
+{
+	int nResult  = FALSE;
+	int nRetCode = FALSE;
+
+	m_pTank = new CTank(0.f, 0.f, 0.f);
+	LOG_FAILD_JUMP(m_pTank);
+
+	CGraphicsEngine::GetInstance()->SetCameraPosition(
+		m_pTank->GetPosition().x + 50,
+		m_pTank->GetPosition().y + 30,
+		m_pTank->GetPosition().z
+	);
+
+	for(int i = 0 ; i < 40 ; ++i)
+	{
+		m_vWalls[i] = new CWall(-395.f, 0, -395.f + i * 20.f);
+		LOG_FAILD_JUMP(m_vWalls[i]);
+
+		m_vWalls[40 + i] = new CWall(395.f, 0, -395.f + i * 20.f);
+		LOG_FAILD_JUMP(m_vWalls[40 + i]);
+	}
+
+	for(int i = 0 ; i < 40 ; ++i)
+	{
+		m_vWalls[80 + i] = new CWall(-395.f + i*20.f,0,-395.f);
+		LOG_FAILD_JUMP(m_vWalls[80 + i]);
+
+		m_vWalls[120 + i] = new CWall(-395.f + i*20.f,0,395.f);
+		LOG_FAILD_JUMP(m_vWalls[120 + i]);
+	}
+
+	m_pTree[0] = new CTree();
+	LOG_FAILD_JUMP(m_pTree[0]);
+
+	m_pTree[0]->SetPosition(-350.f, 55.f, -350.f);
+
+	m_pTree[1] = new CTree();
+	LOG_FAILD_JUMP(m_pTree[1]);
+
+	m_pTree[1]->SetPosition(-350.f, 55.f, 350.f);
+
+	m_pTree[2] = new CTree();
+	LOG_FAILD_JUMP(m_pTree[2]);
+
+	m_pTree[2]->SetPosition(350.f, 55.f, -350.f);
+
+	m_pTree[3] = new CTree();
+	LOG_FAILD_JUMP(m_pTree[3]);
+
+	m_pTree[3]->SetPosition(350.f, 55.f, 350.f);
+
+	m_BulletList.clear();
+
+	nRetCode = InitSkyBox();
+	LOG_FAILD_JUMP(nRetCode);
 
 	nResult = TRUE;
 Exit0:

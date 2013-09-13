@@ -16,9 +16,20 @@ CGSWar::~CGSWar(void)
 	}
 }
 
-void CGSWar::Initialize( void )
+int CGSWar::Initialize( void )
 {
+	int nResult  = FALSE;
+	int nRetCode = FALSE;
+
 	m_pControllor = new CSceneMgr();
+	LOG_FAILD_JUMP(m_pControllor);
+
+	nRetCode = m_pControllor->Init();
+	LOG_FAILD_JUMP(nRetCode);
+
+	nResult = TRUE;
+Exit0:
+	return nResult;
 }
 
 void CGSWar::Update( void )
